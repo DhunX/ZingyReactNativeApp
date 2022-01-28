@@ -9,7 +9,9 @@ export default (): JSX.Element => (
   <React.Fragment>
     <IconRegistry icons={EvaIconsPack} />
     <ApplicationProvider {...eva} theme={eva.dark}>
+      {/* <SafeAreaProvider> */}
       <Main />
+      {/* </SafeAreaProvider> */}
     </ApplicationProvider>
   </React.Fragment>
 );

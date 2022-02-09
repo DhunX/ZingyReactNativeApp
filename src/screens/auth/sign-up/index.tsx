@@ -35,13 +35,13 @@ export default ({navigation}): React.ReactElement => {
   };
 
   const onSignInButtonPress = (): void => {
-    navigation && navigation.navigate('SignIn1');
+    navigation && navigation.navigate('SignIn');
   };
 
   const renderCheckboxLabel = React.useCallback(
     evaProps => (
       <Text {...evaProps} style={styles.termsCheckBoxText}>
-        By creating an account, I agree to the Ewa Terms of\nUse and Privacy
+        By creating an account, I agree to the Zingy Terms of Use and Privacy
         Policy
       </Text>
     ),
@@ -59,7 +59,7 @@ export default ({navigation}): React.ReactElement => {
           status="control"
           size="large"
           accessoryLeft={<HeartIconFill />}>
-          EVA
+          Zingy
         </Button>
         <View style={styles.signUpContainer}>
           <Text style={styles.signInLabel} category="h4" status="control">
@@ -111,7 +111,7 @@ export default ({navigation}): React.ReactElement => {
       <Text style={styles.emailSignLabel}>Sign up with Email</Text>
       <View style={[styles.container, styles.formContainer]}>
         <Input
-          placeholder="Ally"
+          placeholder="John"
           label="FIRST NAME"
           autoCapitalize="words"
           value={firstName}
@@ -119,7 +119,7 @@ export default ({navigation}): React.ReactElement => {
         />
         <Input
           style={styles.formInput}
-          placeholder="Watsan"
+          placeholder="Doe"
           label="LAST NAME"
           autoCapitalize="words"
           value={lastName}
@@ -127,14 +127,14 @@ export default ({navigation}): React.ReactElement => {
         />
         <Datepicker
           style={styles.formInput}
-          placeholder="18/10/1995"
+          placeholder="22/10/2001"
           label="Date of Birth"
           date={dob}
           onSelect={setDob}
         />
         <Input
           style={styles.formInput}
-          placeholder="ally.watsan@gmail.com"
+          placeholder="john.doe@yourmail.com"
           label="EMAIL"
           value={email}
           onChangeText={setEmail}

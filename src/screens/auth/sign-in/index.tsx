@@ -19,7 +19,7 @@ export default ({navigation}): React.ReactElement => {
   };
 
   const onSignUpButtonPress = (): void => {
-    navigation && navigation.navigate('SignUp1');
+    navigation && navigation.navigate('SignUp');
   };
 
   return (

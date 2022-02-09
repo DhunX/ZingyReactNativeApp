@@ -4,13 +4,13 @@ import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 
 const SearchIcon = (
   props?: Partial<ImageProps>,
-): React.ReactElement<ImageProps> => (<Icon {...props} name="search-outline" />);
+): React.ReactElement<ImageProps> => <Icon {...props} name="search-outline" />;
 
-export const Profile = ():JSX.Element => {
+export const Profile = (): JSX.Element => {
   return (
     <Layout style={styles.container}>
       <Text style={styles.text} category="s1">
-        This is a Discovery app for Zingy.
+        This is a your Zingy Profile.
       </Text>
       <Button style={styles.likeButton} accessoryLeft={SearchIcon}>
         Search

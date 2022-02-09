@@ -1,10 +1,6 @@
 import React from 'react';
-import {ImageProps, StyleSheet} from 'react-native';
-import {Button, Icon, Layout, Text} from '@ui-kitten/components';
-
-const HeartIcon = (
-  props?: Partial<ImageProps>,
-): React.ReactElement<ImageProps> => <Icon {...props} name="heart" />;
+import {StyleSheet} from 'react-native';
+import {Layout, Text} from '@ui-kitten/components';
 
 export const Feed = () => {
   return (
@@ -18,9 +14,6 @@ export const Feed = () => {
       <Text style={styles.text} appearance="hint">
         For example, try changing theme to Dark by using eva.dark
       </Text>
-      <Button style={styles.likeButton} accessoryLeft={HeartIcon}>
-        LIKE
-      </Button>
     </Layout>
   );
 };

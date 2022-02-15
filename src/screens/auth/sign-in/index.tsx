@@ -9,13 +9,16 @@ import {
   TwitterIcon,
 } from './extra/icons';
 import {KeyboardAvoidingView} from './extra/3rd-party';
+import {useAuth} from '../../../context/Auth';
 
 export default ({navigation}): React.ReactElement => {
+  const {logIn} = useAuth();
   const [email, setEmail] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
 
   const onSignInButtonPress = (): void => {
-    navigation && navigation.goBack();
+    // navigation && navigation.goBack();
+    logIn(email, password, navigation);
   };
 
   const onSignUpButtonPress = (): void => {

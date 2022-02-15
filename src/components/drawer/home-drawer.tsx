@@ -14,13 +14,24 @@ import {Icon, IconElement} from '@ui-kitten/components';
 import {SafeAreaLayout} from '../safe-area-layout.component';
 import {AppInfoService} from '../../services/app-info.service';
 import {ChatIcon, PersonIcon, HomeIcon, SearchIconOutline} from '../icons';
+import {useAuth} from '../../context/Auth';
 
 const version: string = AppInfoService.getVersion();
 
 export const HomeDrawer = ({navigation}): DrawerElement => {
+  const {signOut} = useAuth();
   const [selectedIndex, setSelectedIndex] = useState<IndexPath>();
 
   const DATA = [
+    {
+      title: 'Log Out',
+      icon: () => <SearchIconOutline />,
+      onPress: () => {
+        navigation.toggleDrawer();
+        signOut(navigation);
+        // navigation.navigate('Search');
+      },
+    },
     {
       title: 'Chat',
       icon: () => <ChatIcon />,

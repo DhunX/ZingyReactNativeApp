@@ -15,7 +15,7 @@ const navigatorTheme = {
 };
 
 export const AppNavigator = (): React.ReactElement => (
-  <NavigationContainer theme={navigatorTheme}>
+  <NavigationContainer headerMode="none" theme={navigatorTheme}>
     <HomeNavigator />
   </NavigationContainer>
 );

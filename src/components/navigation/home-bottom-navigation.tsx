@@ -9,9 +9,10 @@ import {
   BottomNavigation,
 } from '@ui-kitten/components';
 import {
-  ColorPaletteIcon,
-  LayoutIcon,
-  StarOutlineIcon,
+  ChatIcon,
+  HomeIcon,
+  PersonIcon,
+  SearchIcon,
 } from '../../components/icons';
 
 const useVisibilityAnimation = (visible: boolean): ViewStyle => {
@@ -65,12 +66,12 @@ export const HomeBottomNavigation: React.FC<BottomTabBarProps> = ({
       ]}>
       <Divider />
       <BottomNavigation
-        appearance="noIndicator"
+        appearance="default"
         selectedIndex={state.index}
         onSelect={onSelect}>
-        <BottomNavigationTab title="Layouts" icon={LayoutIcon} />
-        <BottomNavigationTab title="Components" icon={StarOutlineIcon} />
-        <BottomNavigationTab title="Themes" icon={ColorPaletteIcon} />
+        <BottomNavigationTab title="Home" icon={HomeIcon} />
+        <BottomNavigationTab title="Discover" icon={SearchIcon} />
+        <BottomNavigationTab title="Profile" icon={PersonIcon} />
       </BottomNavigation>
     </Animated.View>
   );

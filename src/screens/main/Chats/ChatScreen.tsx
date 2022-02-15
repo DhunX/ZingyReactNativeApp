@@ -1,19 +1,17 @@
 import React from 'react';
 import {Image, StyleSheet} from 'react-native';
-import {Icon, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
+import {TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
 import ContentView from './chat-screen';
+import {ArrowIosBackIcon} from '../../../components/icons';
 
-export const Chat2Screen = ({navigation}): React.ReactElement => {
+export const ChatScreen = ({navigation}): React.ReactElement => {
   const onProfileActionPress = (): void => {
-    navigation.navigate('Profile7');
+    navigation.navigate('Feed');
   };
 
   const renderBackAction = (): React.ReactElement => (
-    <TopNavigationAction
-      icon={style => <Icon {...style} name="arrow-ios-forward" />}
-      onPress={navigation.goBack}
-    />
+    <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
   );
 
   const renderProfileAction = (): React.ReactElement => (
@@ -26,7 +24,7 @@ export const Chat2Screen = ({navigation}): React.ReactElement => {
   const renderProfileImage = (): React.ReactElement => (
     <Image
       style={styles.profileImage}
-      source={require('../../assets/images/image-app-icon.png')}
+      source={require('../../../assets/images/image-app-icon.png')}
     />
   );
 

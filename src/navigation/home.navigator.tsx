@@ -10,7 +10,8 @@ import {ChatsNavigator} from './chats.navigator';
 import {SearchNavigator} from './search.navigator';
 import {ProfileNavigator} from './profile.navigator';
 import {HomeBottomNavigation} from '../components/navigation/home-bottom-navigation';
-import {HomeDrawer} from '../components/drawer/home-drawer';
+import {SettingsNavigator} from './settings.navigator';
+// import {HomeDrawer} from '../components/drawer/home-drawer';
 
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -21,37 +22,29 @@ const Drawer = createDrawerNavigator();
  */
 const initialTabRoute: string = __DEV__ ? 'Components' : 'Layouts';
 
-const ROOT_ROUTES: string[] = ['Home', 'Layouts', 'Components', 'Themes'];
+const ROOT_ROUTES: string[] = ['Feed', 'Search', 'ChatsListScreen', 'Profile'];
 
 const TabBarVisibilityOptions = ({route}): BottomTabNavigationOptions => {
   const isNestedRoute: boolean = route.state?.index > 0;
   const isRootRoute: boolean = ROOT_ROUTES.includes(route.name);
 
-  return {tabBarVisible: isRootRoute && !isNestedRoute};
+  return {tabBarVisible: isRootRoute && !isNestedRoute, header: () => null};
 };
 
-const HomeTabsNavigator = (): React.ReactElement => (
+export const HomeNavigator = (): React.ReactElement => (
   <BottomTab.Navigator
+    headerMode="none"
     screenOptions={TabBarVisibilityOptions}
-    initialRouteName={initialTabRoute}
+    initialRouteName={'Feed'}
     tabBar={(props: JSX.IntrinsicAttributes) => (
       <HomeBottomNavigation {...props} />
     )}>
-    <BottomTab.Screen name="Weed" component={FeedNavigator} />
+    <BottomTab.Screen name="Feed" component={FeedNavigator} />
     <BottomTab.Screen name="Search" component={SearchNavigator} />
-    <BottomTab.Screen name="Chat" component={ChatsNavigator} />
     <BottomTab.Screen name="Profile" component={ProfileNavigator} />
+    <BottomTab.Screen name="Chat" component={ChatsNavigator} />
+    <BottomTab.Screen name="Settings" component={SettingsNavigator} />
   </BottomTab.Navigator>
-);
-
-export const HomeNavigator = (): React.ReactElement => (
-  <Drawer.Navigator
-    screenOptions={{gestureEnabled: false}}
-    drawerContent={(props: JSX.IntrinsicAttributes) => (
-      <HomeDrawer {...props} />
-    )}>
-    <Drawer.Screen name="Home" component={HomeTabsNavigator} />
-  </Drawer.Navigator>
 );
 
 LogBox.ignoreLogs(["Accessing the 'state'"]);

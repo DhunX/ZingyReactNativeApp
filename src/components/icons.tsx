@@ -78,7 +78,7 @@ export const SearchIconOutline = (props: any): JSX.Element => (
 );
 
 export const SettingsIcon = (style: ImageStyle): IconElement => (
-  <Icon {...style} name="settings" />
+  <Icon {...style} name="settings-outline" />
 );
 
 export const StarIcon = (style: ImageStyle): IconElement => (

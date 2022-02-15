@@ -1,21 +1,14 @@
 import React from 'react';
-import {Text, StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {View, ActivityIndicator} from 'react-native';
 
-const Loading = () => {
+export const Loading = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Loading...</Text>
-    </SafeAreaView>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+      }}>
+      <ActivityIndicator color={'#000'} animating={true} size="small" />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
-export default Loading;

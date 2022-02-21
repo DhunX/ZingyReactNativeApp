@@ -25,7 +25,7 @@ export const Discovery = ({navigation}) => {
   const renderChatAction = (): React.ReactElement => (
     <TopNavigationAction
       icon={ChatIcon}
-      onPress={() => navigation.navigate('ChatsListScreen')}
+      onPress={() => navigation.navigate('Chat')}
     />
   );
   return (

@@ -13,7 +13,7 @@ import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
 import {ArrowIosBackIcon, SettingsIcon} from '../../../components/icons';
 
 export const Profile = ({navigation}): JSX.Element => {
-  const {authData, signOut} = useAuth();
+  const {authData} = useAuth();
 
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
@@ -43,7 +43,6 @@ export const Profile = ({navigation}): JSX.Element => {
           <Text style={styles.text} category="s1">
             Name: {authData.data.user.name}
           </Text>
-          <Button onPress={signOut}>Sign Out</Button>
         </Layout>
       </ScrollView>
     </SafeAreaLayout>

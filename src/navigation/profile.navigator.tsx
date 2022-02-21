@@ -6,6 +6,6 @@ const Stack = createStackNavigator();
 
 export const ProfileNavigator = (): React.ReactElement => (
   <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Profile" component={ProfileScreen} />
+    <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
   </Stack.Navigator>
 );

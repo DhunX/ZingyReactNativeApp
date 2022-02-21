@@ -7,7 +7,15 @@ import * as eva from '@eva-design/eva';
 import {AuthProvider} from './context/Auth';
 import Navigation from './navigation';
 
-export default (): JSX.Element => {
+export const ThemeModeContext = React.createContext<{
+  mode: string;
+  setMode: (mode: string) => void;
+}>({
+  mode: 'light',
+  setMode: () => {},
+});
+
+export default (): React.ReactElement => {
   const [themeMode, setThemeMode] = React.useState('light');
   return (
     <React.Fragment>
@@ -17,7 +25,13 @@ export default (): JSX.Element => {
           {...eva}
           theme={themeMode === 'dark' ? eva.dark : eva.light}>
           <AuthProvider>
-            <Navigation />
+            <ThemeModeContext.Provider
+              value={{
+                mode: themeMode,
+                setMode: (e: string): void => setThemeMode(e),
+              }}>
+              <Navigation />
+            </ThemeModeContext.Provider>
           </AuthProvider>
         </ApplicationProvider>
       </AppearanceProvider>

@@ -6,6 +6,6 @@ const Stack = createStackNavigator();
 
 export const FeedNavigator = (): React.ReactElement => (
   <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Feed" component={FeedScreen} />
+    <Stack.Screen name="FeedScreen" component={FeedScreen} />
   </Stack.Navigator>
 );

@@ -6,6 +6,6 @@ const Stack = createStackNavigator();
 
 export const SettingsNavigator = (): React.ReactElement => (
   <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Settings" component={SettingsScreen} />
+    <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
   </Stack.Navigator>
 );

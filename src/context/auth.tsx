@@ -82,7 +82,7 @@ const AuthProvider: React.FC = ({children}) => {
     //to be recovered in the next user session.
     // e.g. : LocalStorage.setItem("@AuthData", JSON.stringify(_authData));
   };
-  const loginGoogle = async (email: string, name: string) => {
+  const logInGoogle = async (email: string, name: string) => {
     setLoading(true);
     //call the service passing credential (email and password).
     //In a real App this data will be provided by the user from some InputText components.
@@ -122,7 +122,13 @@ const AuthProvider: React.FC = ({children}) => {
     //This component will be used to encapsulate the whole App,
     //so all components will have access to the Context
     <AuthContext.Provider
-      value={{authData, loading, logIn, signUp, signOut, loginGoogle}}>
+      value={{
+        authData,
+        loading,
+        logIn,
+        signUp,
+        signOut,
+      }}>
       {children}
     </AuthContext.Provider>
   );

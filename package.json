@@ -27,6 +27,7 @@
     "react-native-device-info": "^8.4.8",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-onboarding-swiper": "^1.2.0",
     "react-native-reanimated": "^2.4.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.2",

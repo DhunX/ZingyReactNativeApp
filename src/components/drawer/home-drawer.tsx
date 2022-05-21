@@ -14,7 +14,7 @@ import {Icon, IconElement} from '@ui-kitten/components';
 import {SafeAreaLayout} from '../safe-area-layout.component';
 import {AppInfoService} from '../../services/app-info.service';
 import {ChatIcon, PersonIcon, HomeIcon, SearchIconOutline} from '../icons';
-import {useAuth} from '../../context/Auth';
+import {useAuth} from '../../context/auth';
 
 const version: string = AppInfoService.getVersion();
 

@@ -45,6 +45,9 @@ export const GridIcon = (style: ImageStyle): IconElement => (
 export const HeartIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name="heart" />
 );
+export const HeartOutlineIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="heart-outline" />
+);
 export const HomeIcon = (props: any): JSX.Element => (
   <Icon {...props} name="home-outline" />
 );
@@ -71,6 +74,12 @@ export const PersonIcon = (props: any): JSX.Element => (
 
 export const SearchIcon = (style: ImageStyle): IconElement => (
   <Icon {...style} name="search" />
+);
+export const ShareIconOutline = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="share-outline" />
+);
+export const MessageSquareOutlineIcon = (style: ImageStyle): IconElement => (
+  <Icon {...style} name="message-square-outline" />
 );
 
 export const SearchIconOutline = (props: any): JSX.Element => (

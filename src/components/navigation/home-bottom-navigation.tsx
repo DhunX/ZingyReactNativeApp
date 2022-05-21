@@ -67,6 +67,12 @@ export const HomeBottomNavigation: React.FC<BottomTabBarProps> = ({
       <Divider />
       <BottomNavigation
         appearance="default"
+        style={{
+          shadowColor: '#000',
+          shadowOffset: {width: 0, height: 0},
+          shadowOpacity: 0.1,
+          shadowRadius: 10,
+        }}
         selectedIndex={state.index}
         onSelect={onSelect}>
         <BottomNavigationTab title="Home" icon={HomeIcon} />

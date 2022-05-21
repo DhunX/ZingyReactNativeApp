@@ -1,12 +1,12 @@
-import { ImageSourcePropType } from 'react-native';
+import {ImageSourcePropType} from 'react-native';
 
 export class Message {
-
-  constructor(readonly text: string,
-              readonly date: string | null,
-              readonly isRead: boolean,
-              readonly profile: Profile) {
-  }
+  constructor(
+    readonly text: string,
+    readonly date: string | null,
+    readonly isRead: boolean,
+    readonly profile: Profile,
+  ) {}
 
   get formattedText(): string {
     const isLong: boolean = this.text.length > 36;
@@ -24,7 +24,7 @@ export class Message {
 
   static canYouSend(): Message {
     return new Message(
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
       '4:12 PM',
       true,
       Profile.shiraiSubaru(),
@@ -33,7 +33,7 @@ export class Message {
 
   static noProblem(): Message {
     return new Message(
-      'No problem! It\'s fine',
+      "No problem! It's fine",
       '12:00 PM',
       true,
       Profile.kariGranleese(),
@@ -42,11 +42,11 @@ export class Message {
 }
 
 export class Profile {
-
-  constructor(readonly firstName: string,
-              readonly lastName: string,
-              readonly photo: ImageSourcePropType) {
-  }
+  constructor(
+    readonly firstName: string,
+    readonly lastName: string,
+    readonly photo: ImageSourcePropType,
+  ) {}
 
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
@@ -76,4 +76,3 @@ export class Profile {
     );
   }
 }
-

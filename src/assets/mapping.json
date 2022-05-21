@@ -1,0 +1,23 @@
+{
+    "components": {
+        "Button": {
+            "meta": {},
+            "appearances": {}
+        },
+        "BottomNavigation": {
+            "appearances": {
+              "filled": {
+                "mapping": {},
+                "variantGroups": {
+                  "status": {
+                    "primary": {
+                      "backgroundColor": "color-primary-default"
+                    }
+                  }
+                }
+              }
+            }
+          }
+    },
+    "color-primary-default": "#000"
+}

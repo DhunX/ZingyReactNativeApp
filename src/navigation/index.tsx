@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAuth} from '../context/Auth';
+import {useAuth} from '../context/auth';
 import {AppNavigator} from './app.navigator';
 import {AuthNavigator} from './auth.navigator';
 import {Loading} from '../screens/Loading';

@@ -10,7 +10,7 @@ import {
 } from '@ui-kitten/components';
 import {ArrowIosBackIcon} from '../../../components/icons';
 import {ThemeModeContext} from '../../../App';
-import {useAuth} from '../../../context/Auth';
+import {useAuth} from '../../../context/auth';
 
 export const Settings = ({navigation}) => {
   const {mode, setMode} = useContext(ThemeModeContext);

@@ -9,7 +9,7 @@ import {
   TwitterIcon,
 } from './extra/icons';
 import {KeyboardAvoidingView} from './extra/3rd-party';
-import {useAuth} from '../../../context/Auth';
+import {useAuth} from '../../../context/auth';
 
 export default ({navigation}): React.ReactElement => {
   const {logIn} = useAuth();

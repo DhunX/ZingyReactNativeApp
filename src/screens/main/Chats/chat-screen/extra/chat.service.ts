@@ -1,9 +1,8 @@
-import { Message } from '../../chat-1/extra/data';
+import {Message} from '../../chat-1/extra/data';
 
 type MessageGroup = Message[];
 
 export class ChatService {
-
   public createMessageGroups = (source: Message[]): MessageGroup[] => {
     if (!source.length) {
       return [];

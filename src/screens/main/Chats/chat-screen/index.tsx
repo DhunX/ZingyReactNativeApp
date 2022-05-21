@@ -1,11 +1,16 @@
 import React from 'react';
-import { ImageSourcePropType, Keyboard, Platform } from 'react-native';
-import { Button, Input, StyleService, useStyleSheet } from '@ui-kitten/components';
-import { KeyboardAvoidingView } from './extra/keyboard-avoiding-view.component';
-import { Chat } from './extra/chat.component';
-import { AttachmentsMenu } from './extra/attachments-menu.component';
-import { MicIcon, PaperPlaneIcon, PlusIcon } from './extra/icons';
-import { Message } from './extra/data';
+import {ImageSourcePropType, Keyboard, Platform} from 'react-native';
+import {
+  Button,
+  Input,
+  StyleService,
+  useStyleSheet,
+} from '@ui-kitten/components';
+import {KeyboardAvoidingView} from './extra/keyboard-avoiding-view.component';
+import {Chat} from './extra/chat.component';
+import {AttachmentsMenu} from './extra/attachments-menu.component';
+import {MicIcon, PaperPlaneIcon, PlusIcon} from './extra/icons';
+import {Message} from './extra/data';
 
 const initialMessages: Message[] = [
   Message.howAreYou(),
@@ -25,18 +30,19 @@ const galleryAttachments: ImageSourcePropType[] = [
   require('./assets/image-attachment-2.jpg'),
 ];
 
-const keyboardOffset = (height: number): number => Platform.select({
-  android: 0,
-  ios: height,
-});
+const keyboardOffset = (height: number): number =>
+  Platform.select({
+    android: 0,
+    ios: height,
+  });
 
 export default (): React.ReactElement => {
-
   const styles = useStyleSheet(themedStyles);
 
   const [messages, setMessages] = React.useState<Message[]>(initialMessages);
   const [message, setMessage] = React.useState<string>(null);
-  const [attachmentsMenuVisible, setAttachmentsMenuVisible] = React.useState<boolean>(false);
+  const [attachmentsMenuVisible, setAttachmentsMenuVisible] =
+    React.useState<boolean>(false);
 
   const sendButtonEnabled = (): boolean => {
     return message && message.length > 0;
@@ -83,13 +89,13 @@ export default (): React.ReactElement => {
         />
         <Input
           style={styles.messageInput}
-          placeholder='Message...'
+          placeholder="Message..."
           value={message}
           onChangeText={setMessage}
           accessoryRight={MicIcon}
         />
         <Button
-          appearance='ghost'
+          appearance="ghost"
           style={[styles.iconButton, styles.sendButton]}
           accessoryLeft={PaperPlaneIcon}
           disabled={!sendButtonEnabled()}

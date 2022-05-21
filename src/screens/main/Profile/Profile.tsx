@@ -82,7 +82,7 @@ export const Profile = ({navigation}): JSX.Element => {
             <View style={{flexDirection: 'row', width: '100%'}}>
               {/* <Text style={styles.profileEmail}>anandjeechoubey@gmail.com</Text> */}
               <Text>{'Followers 450'}</Text>
-              <View style={styles.verticleLine}></View>
+              <View style={styles.verticleLine} />
               <Text>{'Tracks 72'}</Text>
             </View>
             <View style={{display: 'flex', flexDirection: 'row'}}>

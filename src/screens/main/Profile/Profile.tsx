@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, ScrollView, Image, View} from 'react-native';
 import {
@@ -53,9 +54,11 @@ export const Profile = ({navigation}): JSX.Element => {
   );
 
   React.useEffect(() => {
-    getMyInfo(authData.token)
+    getMyInfo(
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aW5neWNsdXN0ZXIiLCJhdWQiOiJ6aW5neW11c2ljIiwic3ViIjoiNjFmYmE2NmFiMjViNzY2YWFiNGFkNjU2IiwiaWF0IjoxNjUzMDQwMzgxLCJleHAiOjE2NTU2MzIzODEsInBybSI6ImJkYmZjMWEzMzdiODRhM2JlZjBlMDg4NTNhZWNjMjI5YjMxOWMyNmI1MWJmZThjZjY3OGNlZTRkZjNhZDcxNWNkYWQ3NDk2YjgxMTJlOTlkYmMzODZmZjUyMTUyY2JjNmY1NTlhYzU4NmE0NTk1NzUyMGEwYTllNDAwZjZkOTUyIn0.e9YnLU6Rbxhyq6KWA2HJCBhecYPuH4wYrpH5ny2ctU0fQTabdICsoNVLsOsBzhvjISFKh2TqttmCGm_knCcCXks-hHht3BhbsK_dG9T1pIW6c15ph4GwubAEOmxg0cVVz7U4GZS58Nl_6WbfoIcfyHIDAJ4ngUISw5MHjyaouPJjYg5ddietfQtx8cAbVtuEEPFbI9D6mxQeUWeUdMMo5M3GLzpV6bd139akfdHNMbW7MiH1cM_Wfr_qiwJkkyL4uqvMybPWCnn82SVC0anLAClhxChEWIQ_eqtOIzcgqYTYm0Uzj7fnREgWkCizqmcIWfzGGKh6tUJgkYqtpVQs_g',
+    )
       .then(res => {
-        setUser(res);
+        setUser(res.data);
       })
       .catch(err => {
         console.log(err);
@@ -127,7 +130,8 @@ export const Profile = ({navigation}): JSX.Element => {
               <Button
                 style={{position: 'absolute', right: 10}}
                 color="black"
-                icon={MoreVerticalIcon}></Button>
+                icon={MoreVerticalIcon}
+              />
               <EvaButton
                 appearance="outline"
                 style={{
@@ -170,10 +174,7 @@ export const Profile = ({navigation}): JSX.Element => {
                 <Text style={styles.mb4} category={'h6'}>
                   Bio
                 </Text>
-                <Text category={'p1'}>
-                  Lorem ipsum dolor sit amet, consectetura piscing elit, sed do
-                  eiusmod tempor .
-                </Text>
+                <Text category={'p1'}>{user?.bio}</Text>
               </Tile>
               <Tile style={styles.mb8}>
                 <Text style={styles.mb4} category={'h6'}>

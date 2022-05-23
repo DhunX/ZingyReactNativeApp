@@ -10,7 +10,7 @@ export type AuthData = {
 
 const logInBasic = async (email: string, password: string) => {
   return axios.post(
-    'https://api-zingy-staging.herokuapp.com/v1/login/basic',
+    'https://api-zingy-staging.herokuapp.com/v1/login/email',
     {
       email,
       password,

@@ -2,13 +2,14 @@ import axios from 'axios';
 
 const BASE_URL = 'https://api-zingy-staging.herokuapp.com/v1';
 
+import {API_KEY} from '@env';
+
 export const getMyInfo = async (token: string) => {
   const uri = `${BASE_URL}/profile/my`;
-  console.log('getMyInfo: ', process.env.API_KEY);
   try {
     const response = await axios.get(uri, {
       headers: {
-        'x-api-key': process.env.API_KEY,
+        'x-api-key': API_KEY,
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
@@ -26,7 +27,7 @@ export const getAllUsers = async (token: string, username?: string) => {
   try {
     const response = await axios.get(uri, {
       headers: {
-        'x-api-key': process.env.API_KEY,
+        'x-api-key': API_KEY,
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
@@ -44,7 +45,7 @@ export const getCities = async (city?: string) => {
   try {
     const response = await axios.get(uri, {
       headers: {
-        'x-api-key': process.env.API_KEY,
+        'x-api-key': API_KEY,
         'Content-Type': 'application/json',
       },
     });

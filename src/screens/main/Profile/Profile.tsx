@@ -1,15 +1,19 @@
 import React from 'react';
 import {StyleSheet, ScrollView, Image, View} from 'react-native';
 import {
-  Button,
+  Button as EvaButton,
   Divider,
   Layout,
   Text,
   TopNavigation,
   TopNavigationAction,
-  OverflowMenu,
-  OverflowMenuElement,
-  MenuItem,
+  // OverflowMenu,
+  // OverflowMenuElement,
+  // MenuItem,
+  useTheme,
+  TabView,
+  Tab,
+  IndexPath,
 } from '@ui-kitten/components';
 import {useAuth} from '../../../context/auth';
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
@@ -18,16 +22,25 @@ import {
   MoreVerticalIcon,
   SettingsIcon,
 } from '../../../components/icons';
+import {Button} from '../../../components/atoms/button.component';
+import {Tile} from '../../../components/atoms/tile.component';
+import {SocialButton} from '../../../components/atoms/social-button.component';
+import {Chip} from '../../../components/atoms/chip.component';
+import {getMyInfo} from '../../../services/apis';
+import {User} from '../../../types/User';
 
 export const Profile = ({navigation}): JSX.Element => {
   const {authData} = useAuth();
 
-  const [visible, setVisible] = React.useState<boolean>(false);
+  const [user, setUser] = React.useState<User>();
+  const theme = useTheme();
+
+  // const [visible, setVisible] = React.useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = React.useState<IndexPath>(null);
 
-  const toggleMenu = (): void => {
-    setVisible(!visible);
-  };
+  // const toggleMenu = (): void => {
+  //   setVisible(e => !e);
+  // };
 
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
@@ -39,20 +52,15 @@ export const Profile = ({navigation}): JSX.Element => {
     />
   );
 
-  const ProfileImage = (): React.ReactElement => (
-    <Image
-      style={styles.profileImage}
-      source={{
-        uri: 'https://zingy-public-media.s3.ap-south-1.amazonaws.com/Zingy.png',
-      }}
-      // resizeMode="cover"
-      resizeMethod="scale"
-    />
-  );
-
-  const handleFollowPressed = (): void => {
-    console.log('Follow Pressed');
-  };
+  React.useEffect(() => {
+    getMyInfo(authData.token)
+      .then(res => {
+        setUser(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [authData.token]);
 
   return (
     <SafeAreaLayout insets="top">
@@ -67,7 +75,7 @@ export const Profile = ({navigation}): JSX.Element => {
           <View style={styles.profileHeader}>
             <Image
               source={{
-                uri: 'https://zingy-public-media.s3.ap-south-1.amazonaws.com/Zingy.png',
+                uri: user?.profilePicUrl,
               }}
               style={styles.profileImage}
               resizeMethod="resize"
@@ -75,19 +83,63 @@ export const Profile = ({navigation}): JSX.Element => {
             />
           </View>
           <View style={styles.profileDetails}>
-            <Text style={styles.profileName}>{authData.data.user.name}</Text>
-            <Text style={styles.profileName}>
-              {authData.data.user.tag || 'Drummer, Guitarist'}
+            <Text style={styles.profileName}>{user?.name}</Text>
+            <Text style={styles.profileTag}>
+              {user?.location || 'Delhi, India'}
             </Text>
-            <View style={{flexDirection: 'row', width: '100%'}}>
+            <Text style={styles.profileTag}>
+              {user?.interests?.join(', ') || 'Drummer, Guitarist'}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginHorizontal: 'auto',
+                ...styles.connections,
+              }}>
               {/* <Text style={styles.profileEmail}>anandjeechoubey@gmail.com</Text> */}
-              <Text>{'Followers 450'}</Text>
+              <Text
+                style={{
+                  color: theme['color-primary-600'],
+                  fontSize: 16,
+                  fontWeight: '600',
+                }}>
+                {'Followers 450'}
+              </Text>
               <View style={styles.verticleLine} />
-              <Text>{'Tracks 72'}</Text>
+              <Text
+                style={{
+                  color: theme['color-primary-600'],
+                  fontSize: 16,
+                  fontWeight: '600',
+                }}>
+                {'Tracks 72'}
+              </Text>
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-              <Button onPress={handleFollowPressed}>Follow</Button>
-              <OverflowMenu
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                width: '100%',
+                position: 'relative',
+                height: 60,
+                marginTop: 12,
+              }}>
+              <Button
+                style={{position: 'absolute', right: 10}}
+                color="black"
+                icon={MoreVerticalIcon}></Button>
+              <EvaButton
+                appearance="outline"
+                style={{
+                  backgroundColor: 'transparent',
+                  position: 'absolute',
+                  left: '50%',
+                  transform: [{translateX: -50}],
+                }}
+                onPress={() => navigation.navigate('EditProfileScreen')}>
+                Edit Profile
+              </EvaButton>
+              {/* <OverflowMenu
                 visible={visible}
                 selectedIndex={selectedIndex}
                 // anchor={() => <MoreVerticalIcon />}
@@ -96,22 +148,56 @@ export const Profile = ({navigation}): JSX.Element => {
                 <MenuItem key={0} title={'Add to fav'} />
                 <MenuItem key={1} title={'Share'} />
                 <MenuItem key={2} title={'Report'} />
-              </OverflowMenu>
+              </OverflowMenu> */}
               {/* <MoreVerticalIcon /> */}
             </View>
           </View>
         </View>
-        <Layout style={styles.container}>
-          <Text style={styles.text} category="s1">
-            This is a your Zingy Profile.
-          </Text>
-        </Layout>
+        <TabView selectedIndex={selectedIndex} onSelect={setSelectedIndex}>
+          <Tab title="Posts">
+            <Layout style={styles.tabViewStyle}>
+              <Text>Tab 1</Text>
+            </Layout>
+          </Tab>
+          <Tab title="Tracks">
+            <Layout style={styles.tabViewStyle}>
+              <Text>Tab 2</Text>
+            </Layout>
+          </Tab>
+          <Tab title="About">
+            <Layout style={styles.tabViewStyle}>
+              <Tile style={styles.mb8}>
+                <Text style={styles.mb4} category={'h6'}>
+                  Bio
+                </Text>
+                <Text category={'p1'}>
+                  Lorem ipsum dolor sit amet, consectetura piscing elit, sed do
+                  eiusmod tempor .
+                </Text>
+              </Tile>
+              <Tile style={styles.mb8}>
+                <Text style={styles.mb4} category={'h6'}>
+                  Genre
+                </Text>
+                <Layout style={styles.genereChips}>
+                  {user?.genere?.map((gen, index) => (
+                    <Chip key={index} style={styles.mr12} text={gen} />
+                  ))}
+                </Layout>
+              </Tile>
+              <Layout style={styles.mv12}>
+                <Text category={'h6'}>Social</Text>
+                <Layout style={styles.socialContainer}>
+                  <SocialButton text="Instagram" />
+                  <SocialButton text="Spotify" />
+                  <SocialButton text="Soundcloud" />
+                  <SocialButton text="YouTube" />
+                </Layout>
+              </Layout>
+            </Layout>
+          </Tab>
+        </TabView>
         <Divider />
-        <Layout style={styles.container}>
-          <Text style={styles.text} category="s1">
-            Name: {authData.data.user.name}
-          </Text>
-        </Layout>
       </ScrollView>
     </SafeAreaLayout>
   );
@@ -121,15 +207,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
     minHeight: '100%',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    margin: 16,
-    borderRadius: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
   },
   text: {
     textAlign: 'center',
@@ -146,25 +223,71 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 9999,
     tintColor: null,
-    borderColor: '#5123A4',
-    borderWidth: 4,
+    borderColor: '#aaa',
+    borderWidth: 1,
     backgroundColor: '#fff',
+    marginBottom: 16,
   },
   profileContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 16,
+    marginVertical: 16,
     justifyContent: 'center',
   },
   profileDetails: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
-  profileName: {},
+  profileName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  profileTag: {
+    marginBottom: 8,
+    fontSize: 14,
+  },
+  connections: {
+    color: '#aaa',
+    marginBottom: 16,
+  },
   verticleLine: {
     height: '100%',
-    width: 1,
-    backgroundColor: '#909090',
+    width: 2,
+    marginHorizontal: 8,
+    backgroundColor: '#ccc',
+  },
+  tabViewStyle: {
+    padding: 16,
+  },
+  whiteText: {
+    color: '#fff',
+  },
+  mb8: {
+    marginBottom: 8,
+  },
+  mb4: {
+    marginBottom: 4,
+  },
+  mv12: {
+    marginVertical: 12,
+  },
+  mr12: {
+    marginRight: 12,
+  },
+  socialContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+    marginBottom: 128,
+  },
+  genereChips: {
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    flexWrap: 'wrap',
+    marginTop: 12,
   },
 });

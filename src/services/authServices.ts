@@ -1,9 +1,11 @@
 import axios from 'axios';
+import {User} from '../types/User';
 
 export type AuthData = {
   token: string;
   email: string;
   name: string;
+  data: {user: User};
 };
 
 const logInBasic = async (email: string, password: string) => {

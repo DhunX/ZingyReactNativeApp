@@ -20,10 +20,25 @@ export const getMyInfo = async (token: string) => {
   }
 };
 
-export const getAllUsers = async (token: string, username?: string) => {
-  const uri = username
-    ? `${BASE_URL}/info/users?username=${username}`
-    : `${BASE_URL}/info/users`;
+export const getAllUsers = async ({
+  token,
+  username,
+  q,
+}: {
+  token: string;
+  username?: string;
+  q?: string;
+}) => {
+  const uri =
+    username && username.length
+      ? `${BASE_URL}/info/users?username=${username}`
+      : q && q.length
+      ? `${BASE_URL}/info/users?q=${q}`
+      : `${BASE_URL}/info/users`;
+
+  if (q && q.length) {
+    console.log(uri);
+  }
   try {
     const response = await axios.get(uri, {
       headers: {

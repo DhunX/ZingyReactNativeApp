@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Avatar, ListItem, ListItemProps, Text} from '@ui-kitten/components';
 import {DoneAllIcon} from './icons';
 import {Message} from './data';
@@ -11,7 +11,7 @@ export type MessageItemProps = ListItemProps & {
 export const MessageItem = (props: MessageItemProps): React.ReactElement => {
   const {message, onPress, ...listItemProps} = props;
 
-  const renderMessageDate = (style: ViewStyle): React.ReactElement => (
+  const renderMessageDate = (): React.ReactElement => (
     <View style={styles.dateContainer}>
       {message.isRead && <DoneAllIcon />}
       <Text style={styles.dateText} appearance="hint" category="c1">

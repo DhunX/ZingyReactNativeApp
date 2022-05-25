@@ -22,13 +22,13 @@ export const Settings = ({navigation}) => {
   return (
     <SafeAreaLayout style={styles.container} insets="top">
       <TopNavigation title="Settings" accessoryLeft={renderBackAction} />
-      <Layout style={{flex: 1}}>
+      <Layout style={styles.container}>
         <Text>Settings</Text>
         <Button
           onPress={() => {
             setMode(mode === 'light' ? 'dark' : 'light');
           }}
-          style={{marginVertical: 20}}>
+          style={styles.mv20}>
           <Text>Change Theme : {mode}</Text>
         </Button>
 
@@ -42,5 +42,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  mv20: {
+    marginVertical: 20,
   },
 });

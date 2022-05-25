@@ -5,8 +5,11 @@ import {AuthData, authServices} from '../services/authServices';
 
 type AuthContextData = {
   authData?: AuthData;
+  accessToken?: string;
+  refreshToken?: string;
   loading: boolean;
   signUp(email: string, password: string, name?: string): Promise<void>;
+  logInGoogle(email: string, name?: string): Promise<void>;
   logIn(email: string, password: string, navigation: any): Promise<void>;
   signOut(navigation: any): void;
 };
@@ -17,6 +20,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();
+  const [accessToken, setAccessToken] = useState<string>();
+  const [refreshToken, setRefreshToken] = useState<string>();
 
   //the AuthContext start with loading equals true
   //and stay like this, until the data be load from Async Storage
@@ -32,6 +37,12 @@ const AuthProvider: React.FC = ({children}) => {
     try {
       //Try get the auth data - from Local Storage
       const authDataSerialized = await AsyncStorage.getItem('@AuthData');
+      AsyncStorage.getItem('@ZingyAccessToken')
+        .then(res => setAccessToken(res))
+        .catch(console.log);
+      AsyncStorage.getItem('@ZingyRefreshToken')
+        .then(res => setRefreshToken(res))
+        .catch(console.log);
       if (authDataSerialized) {
         //If there are data, it's converted to an Object and the state is updated.
         const _authData = JSON.parse(authDataSerialized);
@@ -45,12 +56,22 @@ const AuthProvider: React.FC = ({children}) => {
     }
   }
 
-  const logIn = async (email: string, password: string, navigation: any) => {
+  const logIn = async (email: string, password: string) => {
     setLoading(true);
     try {
       const _authData = await authServices.logInBasic(email, password);
       setAuthData(_authData.data);
       AsyncStorage.setItem('@AuthData', JSON.stringify(_authData.data));
+      AsyncStorage.setItem(
+        '@ZingyAccessToken',
+        _authData.data.data.tokens.accessToken,
+      );
+      setAccessToken(_authData.data.data.tokens.accessToken);
+      setRefreshToken(_authData.data.data.tokens.refreshToken);
+      AsyncStorage.setItem(
+        '@ZingyRefreshToken',
+        _authData.data.data.tokens.refreshToken,
+      );
     } catch (error) {
       console.log('AsyncStorageSavingDataErr:', error);
     } finally {
@@ -70,6 +91,16 @@ const AuthProvider: React.FC = ({children}) => {
       );
       setAuthData(_authData.data);
       AsyncStorage.setItem('@AuthData', JSON.stringify(_authData.data));
+      AsyncStorage.setItem(
+        '@ZingyAccessToken',
+        _authData.data.data.tokens.accessToken,
+      );
+      setAccessToken(_authData.data.data.tokens.accessToken);
+      setRefreshToken(_authData.data.data.tokens.refreshToken);
+      AsyncStorage.setItem(
+        '@ZingyRefreshToken',
+        _authData.data.data.tokens.refreshToken,
+      );
     } catch (error) {
       console.log('AsyncStorageSavingDataErr:', error);
     } finally {
@@ -82,7 +113,7 @@ const AuthProvider: React.FC = ({children}) => {
     //to be recovered in the next user session.
     // e.g. : LocalStorage.setItem("@AuthData", JSON.stringify(_authData));
   };
-  const logInGoogle = async (email: string, name: string) => {
+  const logInGoogle = async (email: string, name?: string) => {
     setLoading(true);
     //call the service passing credential (email and password).
     //In a real App this data will be provided by the user from some InputText components.
@@ -108,7 +139,9 @@ const AuthProvider: React.FC = ({children}) => {
     try {
       setAuthData(undefined);
       await AsyncStorage.removeItem('@AuthData');
-      navigation.navigate('Auth');
+      await AsyncStorage.removeItem('@ZingyAccessToken');
+      await AsyncStorage.removeItem('@ZingyRefreshToken');
+      navigation.navigate('SignUp');
     } catch (error) {
       console.log('AsyncStorageRemoveItemErr:', error);
     } finally {
@@ -124,8 +157,11 @@ const AuthProvider: React.FC = ({children}) => {
     <AuthContext.Provider
       value={{
         authData,
+        accessToken,
+        refreshToken,
         loading,
         logIn,
+        logInGoogle,
         signUp,
         signOut,
       }}>

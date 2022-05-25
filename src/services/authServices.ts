@@ -1,14 +1,16 @@
 import axios from 'axios';
+import {User} from '../types/User';
 
 export type AuthData = {
-  token: string;
+  tokens: {accessToken: string; refreshToken: string};
   email: string;
   name: string;
+  data: {user: User};
 };
 
 const logInBasic = async (email: string, password: string) => {
   return axios.post(
-    'https://api-zingy-staging.herokuapp.com/v1/login/basic',
+    'https://api-zingy-staging.herokuapp.com/v1/login/email',
     {
       email,
       password,

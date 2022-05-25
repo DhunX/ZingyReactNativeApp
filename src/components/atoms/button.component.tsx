@@ -21,5 +21,12 @@ export const Button: any = (props: any) => {
     },
     style,
   ];
-  return <EvaButton accessoryLeft={icon} {...rest} style={buttonStyle} />;
+  return (
+    <EvaButton
+      appearance={'ghost'}
+      accessoryLeft={icon}
+      {...rest}
+      style={buttonStyle}
+    />
+  );
 };

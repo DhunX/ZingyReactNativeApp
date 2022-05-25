@@ -21,20 +21,21 @@ import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
 import {
   ArrowIosBackIcon,
   MoreVerticalIcon,
-  SettingsIcon,
+  // SettingsIcon,
 } from '../../../components/icons';
 import {Button} from '../../../components/atoms/button.component';
 import {Tile} from '../../../components/atoms/tile.component';
 import {SocialButton} from '../../../components/atoms/social-button.component';
 import {Chip} from '../../../components/atoms/chip.component';
-import {getMyInfo} from '../../../services/apis';
+import {getAllUsers} from '../../../services/apis';
 import {User} from '../../../types/User';
 import {Loading} from '../../Loading';
 
-export const Profile = ({navigation}): JSX.Element => {
+export const ProfilePublic = ({route, navigation}): JSX.Element => {
   const {accessToken} = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  const {username} = route.params;
   const [user, setUser] = React.useState<User>();
   const theme = useTheme();
 
@@ -48,16 +49,16 @@ export const Profile = ({navigation}): JSX.Element => {
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
   );
-  const renderSettingsAction = (): React.ReactElement => (
-    <TopNavigationAction
-      icon={SettingsIcon}
-      onPress={() => navigation.navigate('Settings')}
-    />
-  );
+  // const renderSettingsAction = (): React.ReactElement => (
+  //   <TopNavigationAction
+  //     icon={SettingsIcon}
+  //     onPress={() => navigation.navigate('Settings')}
+  //   />
+  // );
 
   React.useEffect(() => {
     setLoading(true);
-    getMyInfo(accessToken)
+    getAllUsers({token: accessToken, username})
       .then(res => {
         setUser(res.data);
         setLoading(false);
@@ -66,7 +67,7 @@ export const Profile = ({navigation}): JSX.Element => {
         console.log(err);
         setLoading(false);
       });
-  }, [accessToken]);
+  }, [accessToken, username]);
 
   if (loading) {
     return <Loading />;
@@ -75,9 +76,9 @@ export const Profile = ({navigation}): JSX.Element => {
   return (
     <SafeAreaLayout insets="top">
       <TopNavigation
-        title="Profile"
+        title={`@${username}`}
         accessoryLeft={renderBackAction}
-        accessoryRight={renderSettingsAction}
+        // accessoryRight={renderSettingsAction}
       />
       <ScrollView style={styles.scrollView}>
         {/* <ProfileImage /> */}
@@ -136,15 +137,14 @@ export const Profile = ({navigation}): JSX.Element => {
                 icon={MoreVerticalIcon}
               />
               <EvaButton
-                appearance="outline"
+                appearance="filled"
                 style={{
-                  backgroundColor: 'transparent',
                   position: 'absolute',
                   left: '50%',
                   transform: [{translateX: -50}],
                 }}
-                onPress={() => navigation.navigate('EditProfileScreen')}>
-                Edit Profile
+                onPress={() => console.log('Follow Pressed')}>
+                Follow
               </EvaButton>
               {/* <OverflowMenu
                 visible={visible}
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
     tintColor: null,
     borderColor: '#aaa',
-    borderWidth: 0,
+    borderWidth: 1,
     backgroundColor: '#fff',
     marginBottom: 16,
   },

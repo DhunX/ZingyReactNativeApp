@@ -2,7 +2,7 @@ import axios from 'axios';
 import {User} from '../types/User';
 
 export type AuthData = {
-  token: string;
+  tokens: {accessToken: string; refreshToken: string};
   email: string;
   name: string;
   data: {user: User};

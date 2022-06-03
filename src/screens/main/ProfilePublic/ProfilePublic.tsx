@@ -83,10 +83,16 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
       <ScrollView style={styles.scrollView}>
         {/* <ProfileImage /> */}
         <View style={styles.profileContainer}>
-          <View style={styles.profileHeader}>
+          <View
+            style={{
+              backgroundColor: user?.profilePicUrl?.length ? '#fff' : '#F0EFEB',
+              ...styles.profileHeader,
+            }}>
             <Image
               source={{
-                uri: user?.profilePicUrl,
+                uri: user?.profilePicUrl?.length
+                  ? user.profilePicUrl
+                  : 'https://zingy-public-media.s3.ap-south-1.amazonaws.com/placeholder_dp.jpeg',
               }}
               style={styles.profileImage}
               resizeMethod="resize"

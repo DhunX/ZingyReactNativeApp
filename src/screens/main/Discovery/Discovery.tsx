@@ -106,7 +106,11 @@ export const Discovery = ({navigation}) => {
                   style={styles.avatar}
                   resizeMethod="resize"
                   resizeMode="contain"
-                  source={{uri: user.profilePicUrl}}
+                  source={{
+                    uri: user?.profilePicUrl?.length
+                      ? user.profilePicUrl
+                      : 'https://zingy-public-media.s3.ap-south-1.amazonaws.com/placeholder_dp.jpeg',
+                  }}
                 />
               </View>
               <Text style={styles.personName} key={index}>

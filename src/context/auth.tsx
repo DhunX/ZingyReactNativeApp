@@ -8,6 +8,7 @@ type AuthContextData = {
   accessToken?: string;
   refreshToken?: string;
   loading: boolean;
+  hasAccess?: boolean;
   signUp(email: string, password: string, name?: string): Promise<void>;
   logInGoogle(email: string, name?: string): Promise<void>;
   logIn(email: string, password: string, navigation: any): Promise<void>;
@@ -22,6 +23,7 @@ const AuthProvider: React.FC = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();
   const [accessToken, setAccessToken] = useState<string>();
   const [refreshToken, setRefreshToken] = useState<string>();
+  const [hasAccess, setHasAccess] = useState<boolean>(true);
 
   //the AuthContext start with loading equals true
   //and stay like this, until the data be load from Async Storage
@@ -164,6 +166,7 @@ const AuthProvider: React.FC = ({children}) => {
         logInGoogle,
         signUp,
         signOut,
+        hasAccess,
       }}>
       {children}
     </AuthContext.Provider>

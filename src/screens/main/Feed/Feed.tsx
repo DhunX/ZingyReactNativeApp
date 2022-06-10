@@ -19,6 +19,7 @@ import {Card} from '../../../components/atoms/card.component';
 import {User} from '../../../types/User';
 import {getLatestPosts} from '../../../services/apis';
 import {POST_TYPES} from '../../../constants';
+import {timeSince} from '../../../utils/Time';
 
 interface PostType {
   description: string;
@@ -100,7 +101,12 @@ export const Feed = ({navigation}) => {
   }, []);
   return (
     <SafeAreaLayout insets="top" style={styles.container}>
-      <TopNavigation accessoryRight={renderChatAction} />
+      <TopNavigation
+        accessoryRight={renderChatAction}
+        accessoryLeft={
+          <Image source={require('../../../assets/images/logo.png')} />
+        }
+      />
 
       <ScrollView>
         <Layout style={styles.feed}>
@@ -119,8 +125,22 @@ export const Feed = ({navigation}) => {
                       }}
                     />
                     <Layout style={styles.postHeaderText}>
-                      <Text style={styles.text}>{post.author.name}</Text>
-                      <Text style={styles.text}>{`${post.createdAt}`}</Text>
+                      <Text style={styles.text} category="s1">
+                        {post.author.name}
+                      </Text>
+                      <Layout
+                        style={{
+                          flexDirection: 'row',
+                          backgroundColor: 'transparent',
+                        }}>
+                        <Text style={styles.text} category="s2">
+                          {post.author.interests.join(', ')}
+                        </Text>
+                        <Text style={styles.text} category="s2">
+                          {' - '}
+                          {timeSince(post.createdAt)}
+                        </Text>
+                      </Layout>
                     </Layout>
                   </Layout>
                   <Text style={styles.text} appearance="hint">

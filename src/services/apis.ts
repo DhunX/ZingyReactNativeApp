@@ -69,3 +69,24 @@ export const getCities = async (city?: string) => {
     return error;
   }
 };
+
+export const getLatestPosts = async ({
+  pageNumber,
+  limit,
+}: {
+  pageNumber: number;
+  limit: number;
+}) => {
+  const uri = `${BASE_URL}/posts/latest?pageNumber=${pageNumber}&pageItemCount=${limit}`;
+  try {
+    const response = await axios.get(uri, {
+      headers: {
+        'x-api-key': API_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

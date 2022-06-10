@@ -38,6 +38,7 @@ export const Card: any = ({children, interactions = false, ...props}) => {
           backgroundColor: theme['color-primary-900'],
           color: 'white',
           borderRadius: 16,
+          width: '100%',
         },
       ]}>
       {children}

@@ -10,7 +10,7 @@ export type User = {
   followers?: {count: number; users: string[]};
   following?: {count: number; users: string[]};
   tracks?: string[];
-  posts?: string[];
+  posts?: any[];
   interests?: string[];
   isCreator?: boolean;
 };

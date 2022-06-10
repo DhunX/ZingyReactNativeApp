@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, ScrollView, Image, View} from 'react-native';
+import {StyleSheet, ScrollView, Image, View, Dimensions} from 'react-native';
 import {
   Button as EvaButton,
   Divider,
@@ -15,6 +15,8 @@ import {
   TabView,
   Tab,
   IndexPath,
+  List,
+  Card,
 } from '@ui-kitten/components';
 import {useAuth} from '../../../context/auth';
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
@@ -166,7 +168,15 @@ export const Profile = ({navigation}): JSX.Element => {
           <Tab title="Posts">
             {user?.posts?.length > 0 ? (
               <Layout style={styles.tabViewStyle}>
-                <Text>Tab 1</Text>
+                <List
+                  data={user?.posts}
+                  numColumns={3}
+                  renderItem={info => (
+                    <Card style={styles.item}>
+                      <Text>{info.item.description}</Text>
+                    </Card>
+                  )}
+                />
               </Layout>
             ) : (
               <Layout style={styles.noContentView}>
@@ -313,5 +323,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     paddingVertical: 128,
+  },
+  item: {
+    flex: 1,
+    justifyContent: 'center',
+    aspectRatio: 1.0,
+    margin: 0,
+    maxWidth: '33%',
   },
 });

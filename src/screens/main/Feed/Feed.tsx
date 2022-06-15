@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
-import {Image, ScrollView, StyleSheet} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   Avatar,
   Layout,
@@ -12,6 +12,7 @@ import {
 import VideoPlayer from 'react-native-video-player';
 import {FloatingAction} from 'react-native-floating-action';
 import Toast from 'react-native-toast-message';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
 import {ChatIcon} from '../../../components/icons';
@@ -45,6 +46,7 @@ interface PostType {
 }
 
 export const Feed = ({navigation}) => {
+  const refRBSheet = useRef();
   const [posts, setPosts] = React.useState<PostType[]>();
   const theme = useTheme();
   const actions = [
@@ -166,10 +168,43 @@ export const Feed = ({navigation}) => {
             : null}
         </Layout>
       </ScrollView>
+      <RBSheet
+        ref={refRBSheet}
+        height={300}
+        closeOnDragDown={false}
+        closeOnPressMask={true}
+        customStyles={{
+          container: {
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        }}>
+        <TouchableOpacity>Photo or Video</TouchableOpacity>
+        <TouchableOpacity>Only Track</TouchableOpacity>
+        <TouchableOpacity>Only Text</TouchableOpacity>
+      </RBSheet>
       <FloatingAction
         actions={actions}
         onPressItem={name => {
           console.log(`selected button: ${name}`);
+          switch (name) {
+            case 'bt_create':
+              if (refRBSheet.current !== null) {
+                refRBSheet.current.open();
+              }
+              break;
+            case 'bt_hire':
+              navigation.navigate('Hire');
+              break;
+            case 'bt_hireme':
+              navigation.navigate('HireMe');
+              break;
+            case 'bt_rsvp':
+              navigation.navigate('RSVP');
+              break;
+            default:
+              break;
+          }
         }}
         color={theme['color-primary-500']}
       />
@@ -189,7 +224,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    color: 'white',
+    color: 'black',
   },
   likeButton: {
     marginVertical: 16,
@@ -197,9 +232,9 @@ const styles = StyleSheet.create({
   postHeader: {
     flexDirection: 'row',
     backgroundColor: 'transparent',
-    color: 'white',
+    color: 'black',
     paddingBottom: 16,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
   },
   avatar: {

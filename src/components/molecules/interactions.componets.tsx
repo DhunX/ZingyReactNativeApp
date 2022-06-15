@@ -12,11 +12,7 @@ import {Button} from '../atoms/button.component';
 export const Interactions: any = (props: any) => {
   const theme = useTheme();
   return (
-    <Layout
-      style={{
-        ...styles.interactions,
-        backgroundColor: theme['color-primary-900'],
-      }}>
+    <Layout style={styles.interactions}>
       <Button icon={HeartOutlineIcon} />
       <Button icon={MessageSquareOutlineIcon} />
       <Button icon={ShareIconOutline} />
@@ -27,6 +23,7 @@ export const Interactions: any = (props: any) => {
 const styles = StyleSheet.create({
   interactions: {
     borderTopColor: '#fff',
+    backgroundColor: 'transparent',
     borderTopWidth: 1,
     marginTop: 12,
     color: '#fff',

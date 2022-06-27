@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, ScrollView, Image, View} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  Image,
+  View,
+  RefreshControl,
+} from 'react-native';
 import {
   Button as EvaButton,
   Divider,
@@ -15,6 +21,8 @@ import {
   TabView,
   Tab,
   IndexPath,
+  List,
+  Card,
 } from '@ui-kitten/components';
 import {useAuth} from '../../../context/auth';
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
@@ -30,10 +38,12 @@ import {Chip} from '../../../components/atoms/chip.component';
 import {getAllUsers} from '../../../services/apis';
 import {User} from '../../../types/User';
 import {Loading} from '../../Loading';
+import Toast from 'react-native-toast-message';
 
 export const ProfilePublic = ({route, navigation}): JSX.Element => {
   const {accessToken} = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const {username} = route.params;
   const [user, setUser] = React.useState<User>();
@@ -69,6 +79,24 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
       });
   }, [accessToken, username]);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getAllUsers({token: accessToken, username})
+      .then(res => {
+        setRefreshing(false);
+        setUser(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+        setRefreshing(false);
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      });
+  }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -80,7 +108,11 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
         accessoryLeft={renderBackAction}
         // accessoryRight={renderSettingsAction}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {/* <ProfileImage /> */}
         <View style={styles.profileContainer}>
           <View
@@ -170,7 +202,15 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
           <Tab title="Posts">
             {user?.posts?.length > 0 ? (
               <Layout style={styles.tabViewStyle}>
-                <Text>Tab 1</Text>
+                <List
+                  data={user?.posts}
+                  numColumns={3}
+                  renderItem={info => (
+                    <Card style={styles.item}>
+                      <Text>{info.item.description}</Text>
+                    </Card>
+                  )}
+                />
               </Layout>
             ) : (
               <Layout style={styles.noContentView}>
@@ -226,16 +266,20 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flexGrow: 1,
-    minHeight: '100%',
-  },
-  text: {
-    textAlign: 'center',
-    marginBottom: 16,
-  },
   likeButton: {
     marginVertical: 16,
+  },
+  mb8: {
+    marginBottom: 8,
+  },
+  mb4: {
+    marginBottom: 4,
+  },
+  mv12: {
+    marginVertical: 12,
+  },
+  mr12: {
+    marginRight: 12,
   },
   profileImage: {
     width: 72,
@@ -275,29 +319,32 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginBottom: 16,
   },
+  item: {
+    flex: 1,
+    justifyContent: 'center',
+    aspectRatio: 1.0,
+    margin: 0,
+    maxWidth: '33%',
+  },
+  scrollView: {
+    flexGrow: 1,
+    minHeight: '100%',
+  },
+  text: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  tabViewStyle: {
+    padding: 16,
+  },
   verticleLine: {
     height: '100%',
     width: 2,
     marginHorizontal: 8,
     backgroundColor: '#ccc',
   },
-  tabViewStyle: {
-    padding: 16,
-  },
   whiteText: {
     color: '#fff',
-  },
-  mb8: {
-    marginBottom: 8,
-  },
-  mb4: {
-    marginBottom: 4,
-  },
-  mv12: {
-    marginVertical: 12,
-  },
-  mr12: {
-    marginRight: 12,
   },
   socialContainer: {
     display: 'flex',

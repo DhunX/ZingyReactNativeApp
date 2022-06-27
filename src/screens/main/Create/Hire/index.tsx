@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import React, {useContext} from 'react';
-import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
+import {SafeAreaLayout} from '../../../../components/safe-area-layout.component';
 import {
   Layout,
   TopNavigation,
@@ -8,14 +8,9 @@ import {
   Text,
   Button,
 } from '@ui-kitten/components';
-import {ArrowIosBackIcon} from '../../../components/icons';
-import {ThemeModeContext} from '../../../App';
-import {useAuth} from '../../../context/auth';
+import {ArrowIosBackIcon} from '../../../../components/icons';
 
-export const Hire1 = ({navigation}) => {
-  const {mode, setMode} = useContext(ThemeModeContext);
-  const {signOut} = useAuth();
-
+export const HireScreen = ({navigation}) => {
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
   );
@@ -23,16 +18,8 @@ export const Hire1 = ({navigation}) => {
     <SafeAreaLayout style={styles.container} insets="top">
       <TopNavigation title="Settings" accessoryLeft={renderBackAction} />
       <Layout style={styles.container}>
-        <Text>Settings</Text>
-        <Button
-          onPress={() => {
-            setMode(mode === 'light' ? 'dark' : 'light');
-          }}
-          style={styles.mv20}>
-          <Text>Change Theme : {mode}</Text>
-        </Button>
-
-        <Button onPress={signOut}>Sign Out</Button>
+        <Text>HireScreen</Text>
+        <Button>Test</Button>
       </Layout>
     </SafeAreaLayout>
   );

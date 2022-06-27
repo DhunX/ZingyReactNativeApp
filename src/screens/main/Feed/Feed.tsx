@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef} from 'react';
-import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import {
   Avatar,
   Layout,
@@ -21,6 +27,11 @@ import {User} from '../../../types/User';
 import {getLatestPosts} from '../../../services/apis';
 import {POST_TYPES} from '../../../constants';
 import {timeSince} from '../../../utils/Time';
+
+import PhotoVdoSvg from '../../../assets/vectors/photo-vdo.svg';
+import TextSvg from '../../../assets/vectors/text.svg';
+import TrackSvg from '../../../assets/vectors/track.svg';
+import {Loading} from '../../Loading';
 
 interface PostType {
   description: string;
@@ -48,7 +59,10 @@ interface PostType {
 export const Feed = ({navigation}) => {
   const refRBSheet = useRef();
   const [posts, setPosts] = React.useState<PostType[]>();
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   const theme = useTheme();
+  const styles = getStyles({theme});
   const actions = [
     {
       text: 'Create a Post',
@@ -88,12 +102,15 @@ export const Feed = ({navigation}) => {
   );
 
   useEffect(() => {
+    setIsLoading(true);
     getLatestPosts({limit: 10, pageNumber: 1})
       .then(res => {
         setPosts(res.data);
+        setIsLoading(false);
       })
       .catch(err => {
         console.log(err);
+        setIsLoading(false);
         Toast.show({
           type: 'error',
           position: 'bottom',
@@ -101,6 +118,28 @@ export const Feed = ({navigation}) => {
         });
       });
   }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getLatestPosts({limit: 10, pageNumber: 1})
+      .then(res => {
+        setRefreshing(false);
+        setPosts(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+        setRefreshing(false);
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      });
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <SafeAreaLayout insets="top" style={styles.container}>
       <TopNavigation
@@ -110,7 +149,10 @@ export const Feed = ({navigation}) => {
         }
       />
 
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <Layout style={styles.feed}>
           {posts?.length
             ? posts.map((post, index) => (
@@ -145,7 +187,10 @@ export const Feed = ({navigation}) => {
                       </Layout>
                     </Layout>
                   </Layout>
-                  <Text style={styles.text} appearance="hint">
+                  <Layout style={styles.hr}></Layout>
+                  <Text
+                    style={{...styles.text, marginTop: 8}}
+                    appearance="hint">
                     {post.description}
                   </Text>
                   {post.type === POST_TYPES.VIDEO_POST ? (
@@ -157,11 +202,13 @@ export const Feed = ({navigation}) => {
                         autoplay={true}
                       />
                     </Layout>
-                  ) : post.imgUrl.length ? (
-                    <Image
-                      style={styles.imageContainer}
-                      source={{uri: post.imgUrl}}
-                    />
+                  ) : post.type === POST_TYPES.IMAGE_POST ? (
+                    post.imgUrl?.length ? (
+                      <Image
+                        style={styles.imageContainer}
+                        source={{uri: post.imgUrl}}
+                      />
+                    ) : null
                   ) : null}
                 </Card>
               ))
@@ -175,13 +222,38 @@ export const Feed = ({navigation}) => {
         closeOnPressMask={true}
         customStyles={{
           container: {
-            justifyContent: 'center',
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            justifyContent: 'space-evenly',
             alignItems: 'center',
           },
         }}>
-        <TouchableOpacity>Photo or Video</TouchableOpacity>
-        <TouchableOpacity>Only Track</TouchableOpacity>
-        <TouchableOpacity>Only Text</TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            refRBSheet.current.close();
+            navigation.navigate('PhotoVdoScreen');
+          }}>
+          {/* <PhotoVdoSvg width={24} height={24} /> */}
+          <Text style={styles.rbButton}>Photo or Video</Text>
+        </TouchableOpacity>
+        <Layout style={styles.hr} />
+        <TouchableOpacity
+          onPress={() => {
+            refRBSheet.current.close();
+            navigation.navigate('TrackPostScreen');
+          }}>
+          {/* <TrackSvg /> */}
+          <Text style={styles.rbButton}>Only Track</Text>
+        </TouchableOpacity>
+        <Layout style={styles.hr} />
+        <TouchableOpacity
+          onPress={() => {
+            refRBSheet.current.close();
+            navigation.navigate('TextPostScreen');
+          }}>
+          {/* <TextSvg /> */}
+          <Text style={styles.rbButton}>Only Text</Text>
+        </TouchableOpacity>
       </RBSheet>
       <FloatingAction
         actions={actions}
@@ -194,13 +266,13 @@ export const Feed = ({navigation}) => {
               }
               break;
             case 'bt_hire':
-              navigation.navigate('Hire');
+              navigation.navigate('HireScreen');
               break;
             case 'bt_hireme':
-              navigation.navigate('HireMe');
+              navigation.navigate('HireMeScreen');
               break;
             case 'bt_rsvp':
-              navigation.navigate('RSVP');
+              navigation.navigate('RSVPScreen');
               break;
             default:
               break;
@@ -212,53 +284,62 @@ export const Feed = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  feed: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  text: {
-    textAlign: 'center',
-    color: 'black',
-  },
-  likeButton: {
-    marginVertical: 16,
-  },
-  postHeader: {
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    color: 'black',
-    paddingBottom: 16,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    tintColor: null,
-    padding: 2,
-    backgroundColor: 'white',
-  },
-  videoContainer: {
-    width: '100%',
-    height: 140,
-    marginVertical: 16,
-  },
-  imageContainer: {
-    width: '100%',
-    height: 140,
-    marginVertical: 16,
-  },
-  postHeaderText: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginLeft: 16,
-    backgroundColor: 'transparent',
-  },
-});
+const getStyles = ({theme}) =>
+  StyleSheet.create({
+    avatar: {
+      width: 40,
+      height: 40,
+      tintColor: null,
+      padding: 2,
+      backgroundColor: 'white',
+    },
+    container: {
+      flex: 1,
+    },
+    feed: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+    },
+    hr: {
+      width: '100%',
+      height: 1,
+      backgroundColor: theme['gray-200'],
+    },
+    likeButton: {
+      marginVertical: 16,
+    },
+    postHeader: {
+      flexDirection: 'row',
+      backgroundColor: 'transparent',
+      color: 'black',
+      paddingBottom: 16,
+    },
+    text: {
+      textAlign: 'left',
+      color: 'black',
+    },
+    videoContainer: {
+      width: '100%',
+      height: 140,
+      marginVertical: 16,
+    },
+    imageContainer: {
+      width: '100%',
+      height: 140,
+      marginVertical: 16,
+    },
+    postHeaderText: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      marginLeft: 16,
+      backgroundColor: 'transparent',
+    },
+    rbButton: {
+      color: theme['color-primary-500'],
+      fontWeight: 'bold',
+      fontSize: 18,
+    },
+  });

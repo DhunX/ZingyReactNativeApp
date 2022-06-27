@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, ScrollView, Image, View, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  Image,
+  View,
+  Dimensions,
+  RefreshControl,
+} from 'react-native';
 import {
   Button as EvaButton,
   Divider,
@@ -32,10 +39,12 @@ import {Chip} from '../../../components/atoms/chip.component';
 import {getMyInfo} from '../../../services/apis';
 import {User} from '../../../types/User';
 import {Loading} from '../../Loading';
+import Toast from 'react-native-toast-message';
 
 export const Profile = ({navigation}): JSX.Element => {
   const {accessToken} = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const [user, setUser] = React.useState<User>();
   const theme = useTheme();
@@ -70,6 +79,24 @@ export const Profile = ({navigation}): JSX.Element => {
       });
   }, [accessToken]);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getMyInfo(accessToken)
+      .then(res => {
+        setRefreshing(false);
+        setUser(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+        setRefreshing(false);
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      });
+  }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -81,7 +108,11 @@ export const Profile = ({navigation}): JSX.Element => {
         accessoryLeft={renderBackAction}
         accessoryRight={renderSettingsAction}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {/* <ProfileImage /> */}
         <View style={styles.profileContainer}>
           <View style={styles.profileHeader}>

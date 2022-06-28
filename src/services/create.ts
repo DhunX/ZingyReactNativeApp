@@ -11,8 +11,54 @@ export const createTextPost = async (token: string, value: string) => {
     const uri = `${BASE_URL_STAGING}/writer/post`;
     try {
         const response = await axios.post(uri, {
-              description: value,
-              type: POST_TYPES.TEXT_POST,
+                description: value,
+                type: POST_TYPES.TEXT_POST,
+        }, {
+            headers: {
+                'x-api-key': API_KEY,
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const createJobPost = async (token: string, {genre, skill, location, duration, description}: {genre: string, skill: string, location: string, duration: string, description: string}) => {
+    const uri = `${BASE_URL_STAGING}/writer/post`;
+    try {
+        const response = await axios.post(uri, {
+                genre: genre,
+                skill: skill,
+                location: location,
+                duration: duration,
+                description: description,
+                type: POST_TYPES.JOB_POST,
+        }, {
+            headers: {
+                'x-api-key': API_KEY,
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const createHireMePost = async (token: string, {genre, skill, location, duration, description}: {genre: string, skill: string, location: string, duration: string, description: string}) => {
+    const uri = `${BASE_URL_STAGING}/writer/post`;
+    try {
+        const response = await axios.post(uri, {
+                genre: genre,
+                skill: skill,
+                location: location,
+                duration: duration,
+                description: description,
+                type: POST_TYPES.HIRE_ME_POST,
         }, {
             headers: {
                 'x-api-key': API_KEY,

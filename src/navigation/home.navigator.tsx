@@ -12,7 +12,6 @@ import {ProfileNavigator} from './profile.navigator';
 import {HomeBottomNavigation} from '../components/navigation/home-bottom-navigation';
 import {SettingsNavigator} from './settings.navigator';
 import ProfilePublic from '../screens/main/ProfilePublic';
-import {CreateNavigator} from './create.navigator';
 // import {HomeDrawer} from '../components/drawer/home-drawer';
 
 const BottomTab = createBottomTabNavigator();
@@ -47,7 +46,6 @@ export const HomeNavigator = (): React.ReactElement => (
     <BottomTab.Screen name="PublicProfile" component={ProfilePublic} />
     <BottomTab.Screen name="Chat" component={ChatsNavigator} />
     <BottomTab.Screen name="Settings" component={SettingsNavigator} />
-    <BottomTab.Screen name="CreateNavigator" component={CreateNavigator} />
   </BottomTab.Navigator>
 );
 

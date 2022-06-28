@@ -32,9 +32,17 @@ import PhotoVdoSvg from '../../../assets/vectors/photo-vdo.svg';
 import TextSvg from '../../../assets/vectors/text.svg';
 import TrackSvg from '../../../assets/vectors/track.svg';
 import {Loading} from '../../Loading';
+import {JobCard} from '../../../components/molecules/job-card.component';
 
 interface PostType {
   description: string;
+
+  // job specific fields
+  genre: string;
+  skill: string;
+  location: string;
+  duration: string;
+
   tags: string[];
   author: User;
   imgUrl?: string;
@@ -156,7 +164,11 @@ export const Feed = ({navigation}) => {
         <Layout style={styles.feed}>
           {posts?.length
             ? posts.map((post, index) => (
-                <Card key={index} style={{marginBottom: 12}} interactions>
+                <Card
+                  key={index}
+                  style={{marginBottom: 12}}
+                  interactions
+                  navigation={navigation}>
                   <Layout style={styles.postHeader}>
                     <Avatar
                       style={styles.avatar}
@@ -193,6 +205,17 @@ export const Feed = ({navigation}) => {
                     appearance="hint">
                     {post.description}
                   </Text>
+                  {(post.type === POST_TYPES.JOB_POST ||
+                    post.type === POST_TYPES.HIRE_ME_POST) && (
+                    <JobCard
+                      genre={post.genre}
+                      skill={post.skill}
+                      location={post.location}
+                      duration={post.duration}
+                      action={() => navigation.navigate('MaintenanceScreen')}
+                      type={post.type}
+                    />
+                  )}
                   {post.type === POST_TYPES.VIDEO_POST ? (
                     <Layout style={styles.videoContainer}>
                       <VideoPlayer
@@ -210,6 +233,7 @@ export const Feed = ({navigation}) => {
                       />
                     ) : null
                   ) : null}
+                  {/* <Layout style={styles.hr}></Layout> */}
                 </Card>
               ))
             : null}
@@ -231,7 +255,7 @@ export const Feed = ({navigation}) => {
         <TouchableOpacity
           onPress={() => {
             refRBSheet.current.close();
-            navigation.navigate('PhotoVdoScreen');
+            navigation.navigate('MaintenanceScreen');
           }}>
           {/* <PhotoVdoSvg width={24} height={24} /> */}
           <Text style={styles.rbButton}>Photo or Video</Text>
@@ -240,7 +264,7 @@ export const Feed = ({navigation}) => {
         <TouchableOpacity
           onPress={() => {
             refRBSheet.current.close();
-            navigation.navigate('TrackPostScreen');
+            navigation.navigate('MaintenanceScreen');
           }}>
           {/* <TrackSvg /> */}
           <Text style={styles.rbButton}>Only Track</Text>

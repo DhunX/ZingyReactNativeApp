@@ -27,7 +27,12 @@ const Button: any = (props: any) => {
   return <EvaButton accessoryLeft={icon} {...rest} style={buttonStyle} />;
 };
 
-export const Card: any = ({children, interactions = false, ...props}) => {
+export const Card: any = ({
+  children,
+  navigation,
+  interactions = false,
+  ...props
+}) => {
   const theme = useTheme();
   return (
     <EvaCard
@@ -35,7 +40,7 @@ export const Card: any = ({children, interactions = false, ...props}) => {
       style={[
         props.style,
         {
-          padding: 3,
+          padding: 1,
           backgroundColor: theme['background-basic-1'],
           color: theme['text-basic-1'],
           borderRadius: 16,
@@ -51,7 +56,7 @@ export const Card: any = ({children, interactions = false, ...props}) => {
         },
       ]}>
       {children}
-      {interactions && <Interactions />}
+      {interactions && <Interactions navigation={navigation} />}
     </EvaCard>
   );
 };

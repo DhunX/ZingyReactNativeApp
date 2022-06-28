@@ -282,11 +282,12 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   profileImage: {
-    width: 72,
-    height: 72,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
   },
   profileHeader: {
-    padding: 16,
+    padding: 4,
     borderRadius: 9999,
     tintColor: null,
     borderColor: '#aaa',

@@ -11,35 +11,43 @@ import {
 } from '@ui-kitten/components';
 import {ArrowIosBackIcon} from '../../../../components/icons';
 
-export const RSVPScreen = ({navigation}) => {
-  const [skill, setSkill] = useState('');
-  const [genre, setGenre] = useState('');
+export const HireDetailsScreen = ({route, navigation}) => {
+  const [location, setLocation] = useState('');
+  const [duration, setDuration] = useState('');
+  const {skill, genre} = route.params;
+
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
   );
 
   const handleNext = () => {
-    if (skill && genre) {
-      navigation.navigate('RSVPDetailsScreen', {skill, genre});
+    if (location && duration) {
+      navigation.navigate('HireSubmitScreen', {
+        skill,
+        genre,
+        location,
+        duration,
+      });
     } else {
       alert('Please fill all the fields');
     }
   };
+
   return (
     <SafeAreaLayout style={styles.container} insets="top">
-      <TopNavigation title="Share an Event" accessoryLeft={renderBackAction} />
+      <TopNavigation title="Hire an Artist" accessoryLeft={renderBackAction} />
       <Layout style={styles.container}>
-        <Text style={{...styles.mv20, ...styles.text}}>Genre</Text>
+        <Text style={{...styles.mv20, ...styles.text}}>Location</Text>
         <Input
-          placeholder="Enter the Genre Here"
-          value={genre}
-          onChangeText={nextValue => setGenre(nextValue)}
+          placeholder="Enter the Location of Job"
+          value={location}
+          onChangeText={nextValue => setLocation(nextValue)}
         />
-        <Text style={{...styles.mv20, ...styles.text}}>Skill</Text>
+        <Text style={{...styles.mv20, ...styles.text}}>Duration</Text>
         <Input
-          placeholder="Enter the Skill Here"
-          value={skill}
-          onChangeText={nextValue => setSkill(nextValue)}
+          placeholder="Choose the Duration"
+          value={duration}
+          onChangeText={nextValue => setDuration(nextValue)}
         />
         <Button onPress={handleNext} style={styles.mv40}>
           Next

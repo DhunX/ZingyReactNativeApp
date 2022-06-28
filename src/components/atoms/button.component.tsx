@@ -14,7 +14,6 @@ export const Button: any = (props: any) => {
   const {style, icon, ...rest} = props;
   const buttonStyle = [
     {
-      backgroundColor: 'transparent',
       borderColor: 'transparent',
       padding: 0,
       margin: 0,

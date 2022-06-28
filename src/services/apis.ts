@@ -5,6 +5,7 @@ const BASE_URL_LOCAL = 'http://localhost:5000/v1';
 const BASE_URL_PRODUCTION = 'https://api.zingymusic.com/v1';
 
 import {API_KEY} from '@env';
+import Toast from 'react-native-toast-message';
 
 export const getMyInfo = async (token: string) => {
   const uri = `${BASE_URL_STAGING}/profile/my`;
@@ -86,6 +87,28 @@ export const getLatestPosts = async ({
         'x-api-key': API_KEY,
         'Content-Type': 'application/json',
       },
+    });
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const followUser = async ({userId, token}: {userId: string, token: string}) => {
+  const uri = `${BASE_URL_STAGING}/profile/follow`;
+  try {
+    const response = await axios.put(uri, {
+      userId: userId,
+    }, {
+      headers: {
+        'x-api-key': API_KEY,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    Toast.show({
+      text1: 'Followed',
+      type: 'success',
     });
     return response.data;
   } catch (error) {

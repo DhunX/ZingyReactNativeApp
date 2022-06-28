@@ -35,15 +35,16 @@ import {Button} from '../../../components/atoms/button.component';
 import {Tile} from '../../../components/atoms/tile.component';
 import {SocialButton} from '../../../components/atoms/social-button.component';
 import {Chip} from '../../../components/atoms/chip.component';
-import {getAllUsers} from '../../../services/apis';
+import {followUser, getAllUsers} from '../../../services/apis';
 import {User} from '../../../types/User';
 import {Loading} from '../../Loading';
 import Toast from 'react-native-toast-message';
 
 export const ProfilePublic = ({route, navigation}): JSX.Element => {
-  const {accessToken} = useAuth();
+  const {accessToken, authData} = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [following, setFollowing] = React.useState<boolean>(false);
 
   const {username} = route.params;
   const [user, setUser] = React.useState<User>();
@@ -72,6 +73,11 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
       .then(res => {
         setUser(res.data);
         setLoading(false);
+        if (res.data.followers.users.includes(authData.data.user._id)) {
+          setFollowing(true);
+        } else {
+          setFollowing(false);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -85,6 +91,11 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
       .then(res => {
         setRefreshing(false);
         setUser(res.data);
+        if (res.data.followers.users.includes(authData.data.user._id)) {
+          setFollowing(true);
+        } else {
+          setFollowing(false);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -96,6 +107,39 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
         });
       });
   }, []);
+
+  const handleFollow = async () => {
+    const follow = following;
+    try {
+      const {data} = await followUser({userId: user._id, token: accessToken});
+      if (data.message === 'success') {
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: !follow ? 'Followed Successfully' : 'Unfollowed Successfully',
+        });
+        if (follow) {
+          user.followers.count--;
+        } else {
+          user.followers.count++;
+        }
+        setFollowing(e => !e);
+      } else {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Some Error Occurred',
+      });
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -175,14 +219,19 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
                 icon={MoreVerticalIcon}
               />
               <EvaButton
-                appearance="filled"
+                appearance={following ? 'outline' : 'filled'}
                 style={{
                   position: 'absolute',
                   left: '50%',
                   transform: [{translateX: -50}],
+                  backgroundColor: following
+                    ? '#fff'
+                    : theme['color-primary-600'],
                 }}
-                onPress={() => console.log('Follow Pressed')}>
-                Follow
+                onPress={() => {
+                  handleFollow();
+                }}>
+                {!following ? 'Follow' : 'Following'}
               </EvaButton>
               {/* <OverflowMenu
                 visible={visible}

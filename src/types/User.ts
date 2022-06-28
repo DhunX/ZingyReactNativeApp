@@ -1,4 +1,5 @@
 export type User = {
+  _id: string;
   id: string;
   name: string;
   profilePicUrl: string;
@@ -10,7 +11,7 @@ export type User = {
   followers?: {count: number; users: string[]};
   following?: {count: number; users: string[]};
   tracks?: string[];
-  posts?: string[];
+  posts?: any[];
   interests?: string[];
   isCreator?: boolean;
 };

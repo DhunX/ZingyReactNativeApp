@@ -5,6 +5,7 @@ export type AuthData = {
   tokens: {accessToken: string; refreshToken: string};
   email: string;
   name: string;
+  hasAccess?: boolean;
   data: {user: User};
 };
 

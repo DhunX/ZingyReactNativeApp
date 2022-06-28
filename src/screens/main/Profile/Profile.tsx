@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, ScrollView, Image, View} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  Image,
+  View,
+  Dimensions,
+  RefreshControl,
+} from 'react-native';
 import {
   Button as EvaButton,
   Divider,
@@ -15,6 +22,8 @@ import {
   TabView,
   Tab,
   IndexPath,
+  List,
+  Card,
 } from '@ui-kitten/components';
 import {useAuth} from '../../../context/auth';
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
@@ -30,10 +39,12 @@ import {Chip} from '../../../components/atoms/chip.component';
 import {getMyInfo} from '../../../services/apis';
 import {User} from '../../../types/User';
 import {Loading} from '../../Loading';
+import Toast from 'react-native-toast-message';
 
 export const Profile = ({navigation}): JSX.Element => {
   const {accessToken} = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const [user, setUser] = React.useState<User>();
   const theme = useTheme();
@@ -68,6 +79,24 @@ export const Profile = ({navigation}): JSX.Element => {
       });
   }, [accessToken]);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getMyInfo(accessToken)
+      .then(res => {
+        setRefreshing(false);
+        setUser(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+        setRefreshing(false);
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      });
+  }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -79,13 +108,19 @@ export const Profile = ({navigation}): JSX.Element => {
         accessoryLeft={renderBackAction}
         accessoryRight={renderSettingsAction}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {/* <ProfileImage /> */}
         <View style={styles.profileContainer}>
           <View style={styles.profileHeader}>
             <Image
               source={{
-                uri: user?.profilePicUrl,
+                uri: user?.profilePicUrl?.length
+                  ? user.profilePicUrl
+                  : 'https://zingy-public-media.s3.ap-south-1.amazonaws.com/placeholder_dp.jpeg',
               }}
               style={styles.profileImage}
               resizeMethod="resize"
@@ -164,7 +199,15 @@ export const Profile = ({navigation}): JSX.Element => {
           <Tab title="Posts">
             {user?.posts?.length > 0 ? (
               <Layout style={styles.tabViewStyle}>
-                <Text>Tab 1</Text>
+                <List
+                  data={user?.posts}
+                  numColumns={3}
+                  renderItem={info => (
+                    <Card style={styles.item}>
+                      <Text>{info.item.description}</Text>
+                    </Card>
+                  )}
+                />
               </Layout>
             ) : (
               <Layout style={styles.noContentView}>
@@ -232,11 +275,12 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   profileImage: {
-    width: 72,
-    height: 72,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
   },
   profileHeader: {
-    padding: 16,
+    padding: 4,
     borderRadius: 9999,
     tintColor: null,
     borderColor: '#aaa',
@@ -311,5 +355,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     paddingVertical: 128,
+  },
+  item: {
+    flex: 1,
+    justifyContent: 'center',
+    aspectRatio: 1.0,
+    margin: 0,
+    maxWidth: '33%',
   },
 });

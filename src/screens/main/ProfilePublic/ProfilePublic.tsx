@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, ScrollView, Image, View} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  Image,
+  View,
+  RefreshControl,
+} from 'react-native';
 import {
   Button as EvaButton,
   Divider,
@@ -15,6 +21,8 @@ import {
   TabView,
   Tab,
   IndexPath,
+  List,
+  Card,
 } from '@ui-kitten/components';
 import {useAuth} from '../../../context/auth';
 import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
@@ -27,13 +35,16 @@ import {Button} from '../../../components/atoms/button.component';
 import {Tile} from '../../../components/atoms/tile.component';
 import {SocialButton} from '../../../components/atoms/social-button.component';
 import {Chip} from '../../../components/atoms/chip.component';
-import {getAllUsers} from '../../../services/apis';
+import {followUser, getAllUsers} from '../../../services/apis';
 import {User} from '../../../types/User';
 import {Loading} from '../../Loading';
+import Toast from 'react-native-toast-message';
 
 export const ProfilePublic = ({route, navigation}): JSX.Element => {
-  const {accessToken} = useAuth();
+  const {accessToken, authData} = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [following, setFollowing] = React.useState<boolean>(false);
 
   const {username} = route.params;
   const [user, setUser] = React.useState<User>();
@@ -62,12 +73,73 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
       .then(res => {
         setUser(res.data);
         setLoading(false);
+        if (res.data.followers.users.includes(authData.data.user._id)) {
+          setFollowing(true);
+        } else {
+          setFollowing(false);
+        }
       })
       .catch(err => {
         console.log(err);
         setLoading(false);
       });
   }, [accessToken, username]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getAllUsers({token: accessToken, username})
+      .then(res => {
+        setRefreshing(false);
+        setUser(res.data);
+        if (res.data.followers.users.includes(authData.data.user._id)) {
+          setFollowing(true);
+        } else {
+          setFollowing(false);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setRefreshing(false);
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      });
+  }, []);
+
+  const handleFollow = async () => {
+    const follow = following;
+    try {
+      const {data} = await followUser({userId: user._id, token: accessToken});
+      if (data.message === 'success') {
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: !follow ? 'Followed Successfully' : 'Unfollowed Successfully',
+        });
+        if (follow) {
+          user.followers.count--;
+        } else {
+          user.followers.count++;
+        }
+        setFollowing(e => !e);
+      } else {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Some Error Occurred',
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Some Error Occurred',
+      });
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -80,13 +152,23 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
         accessoryLeft={renderBackAction}
         // accessoryRight={renderSettingsAction}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {/* <ProfileImage /> */}
         <View style={styles.profileContainer}>
-          <View style={styles.profileHeader}>
+          <View
+            style={{
+              backgroundColor: user?.profilePicUrl?.length ? '#fff' : '#F0EFEB',
+              ...styles.profileHeader,
+            }}>
             <Image
               source={{
-                uri: user?.profilePicUrl,
+                uri: user?.profilePicUrl?.length
+                  ? user.profilePicUrl
+                  : 'https://zingy-public-media.s3.ap-south-1.amazonaws.com/placeholder_dp.jpeg',
               }}
               style={styles.profileImage}
               resizeMethod="resize"
@@ -137,14 +219,19 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
                 icon={MoreVerticalIcon}
               />
               <EvaButton
-                appearance="filled"
+                appearance={following ? 'outline' : 'filled'}
                 style={{
                   position: 'absolute',
                   left: '50%',
                   transform: [{translateX: -50}],
+                  backgroundColor: following
+                    ? '#fff'
+                    : theme['color-primary-600'],
                 }}
-                onPress={() => console.log('Follow Pressed')}>
-                Follow
+                onPress={() => {
+                  handleFollow();
+                }}>
+                {!following ? 'Follow' : 'Following'}
               </EvaButton>
               {/* <OverflowMenu
                 visible={visible}
@@ -164,7 +251,15 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
           <Tab title="Posts">
             {user?.posts?.length > 0 ? (
               <Layout style={styles.tabViewStyle}>
-                <Text>Tab 1</Text>
+                <List
+                  data={user?.posts}
+                  numColumns={3}
+                  renderItem={info => (
+                    <Card style={styles.item}>
+                      <Text>{info.item.description}</Text>
+                    </Card>
+                  )}
+                />
               </Layout>
             ) : (
               <Layout style={styles.noContentView}>
@@ -220,23 +315,28 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flexGrow: 1,
-    minHeight: '100%',
-  },
-  text: {
-    textAlign: 'center',
-    marginBottom: 16,
-  },
   likeButton: {
     marginVertical: 16,
   },
+  mb8: {
+    marginBottom: 8,
+  },
+  mb4: {
+    marginBottom: 4,
+  },
+  mv12: {
+    marginVertical: 12,
+  },
+  mr12: {
+    marginRight: 12,
+  },
   profileImage: {
-    width: 72,
-    height: 72,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
   },
   profileHeader: {
-    padding: 16,
+    padding: 4,
     borderRadius: 9999,
     tintColor: null,
     borderColor: '#aaa',
@@ -269,29 +369,32 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginBottom: 16,
   },
+  item: {
+    flex: 1,
+    justifyContent: 'center',
+    aspectRatio: 1.0,
+    margin: 0,
+    maxWidth: '33%',
+  },
+  scrollView: {
+    flexGrow: 1,
+    minHeight: '100%',
+  },
+  text: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  tabViewStyle: {
+    padding: 16,
+  },
   verticleLine: {
     height: '100%',
     width: 2,
     marginHorizontal: 8,
     backgroundColor: '#ccc',
   },
-  tabViewStyle: {
-    padding: 16,
-  },
   whiteText: {
     color: '#fff',
-  },
-  mb8: {
-    marginBottom: 8,
-  },
-  mb4: {
-    marginBottom: 4,
-  },
-  mv12: {
-    marginVertical: 12,
-  },
-  mr12: {
-    marginRight: 12,
   },
   socialContainer: {
     display: 'flex',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Layout, useTheme} from '@ui-kitten/components';
+import {Layout, Text} from '@ui-kitten/components';
 import {StyleSheet} from 'react-native';
 
 import {
@@ -8,18 +8,27 @@ import {
   ShareIconOutline,
 } from '../icons';
 import {Button} from '../atoms/button.component';
+import {HeartIconFill} from '../../screens/auth/sign-up/extra/icons';
 
 export const Interactions: any = (props: any) => {
-  const theme = useTheme();
+  const [liked, setLiked] = React.useState(false);
+
   return (
-    <Layout
-      style={{
-        ...styles.interactions,
-        backgroundColor: theme['color-primary-900'],
-      }}>
-      <Button icon={HeartOutlineIcon} />
-      <Button icon={MessageSquareOutlineIcon} />
-      <Button icon={ShareIconOutline} />
+    <Layout style={styles.interactions}>
+      <Button
+        onPress={() => setLiked(e => !e)}
+        icon={!liked ? HeartOutlineIcon : HeartIconFill}>
+        <Text>Like</Text>
+      </Button>
+      {/* <Button
+        onPress={() => props.navigation.navigate('MaintenanceScreen')}
+        icon={MessageSquareOutlineIcon}
+      /> */}
+      <Button
+        onPress={() => props.navigation.navigate('MaintenanceScreen')}
+        icon={ShareIconOutline}>
+        <Text>Share</Text>
+      </Button>
     </Layout>
   );
 };
@@ -27,12 +36,12 @@ export const Interactions: any = (props: any) => {
 const styles = StyleSheet.create({
   interactions: {
     borderTopColor: '#fff',
+    backgroundColor: 'transparent',
     borderTopWidth: 1,
-    marginTop: 12,
     color: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 12,
+    paddingTop: 6,
     paddingBottom: 0,
   },
 });

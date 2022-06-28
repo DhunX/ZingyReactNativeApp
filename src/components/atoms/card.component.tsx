@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   Card as EvaCard,
@@ -26,7 +27,12 @@ const Button: any = (props: any) => {
   return <EvaButton accessoryLeft={icon} {...rest} style={buttonStyle} />;
 };
 
-export const Card: any = ({children, interactions = false, ...props}) => {
+export const Card: any = ({
+  children,
+  navigation,
+  interactions = false,
+  ...props
+}) => {
   const theme = useTheme();
   return (
     <EvaCard
@@ -34,14 +40,23 @@ export const Card: any = ({children, interactions = false, ...props}) => {
       style={[
         props.style,
         {
-          padding: 3,
-          backgroundColor: theme['color-primary-900'],
-          color: 'white',
+          padding: 1,
+          backgroundColor: theme['background-basic-1'],
+          color: theme['text-basic-1'],
           borderRadius: 16,
+          width: '100%',
+          // shadowColor: theme['shadow-basic-color-1'],
+          // shadowOffset: {
+          //   width: 0,
+          //   height: 2,
+          // },
+          // shadowOpacity: 0.25,
+          // shadowRadius: 3.84,
+          elevation: 5,
         },
       ]}>
       {children}
-      {interactions && <Interactions />}
+      {interactions && <Interactions navigation={navigation} />}
     </EvaCard>
   );
 };

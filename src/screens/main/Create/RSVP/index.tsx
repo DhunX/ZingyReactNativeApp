@@ -12,15 +12,15 @@ import {
 import {ArrowIosBackIcon} from '../../../../components/icons';
 
 export const RSVPScreen = ({navigation}) => {
-  const [skill, setSkill] = useState('');
-  const [genre, setGenre] = useState('');
+  const [details, setDetails] = useState('');
+  const [eventName, setEventName] = useState('');
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
   );
 
   const handleNext = () => {
-    if (skill && genre) {
-      navigation.navigate('RSVPDetailsScreen', {skill, genre});
+    if (details && eventName) {
+      navigation.navigate('RSVPDetailsScreen', {details, eventName});
     } else {
       alert('Please fill all the fields');
     }
@@ -29,17 +29,19 @@ export const RSVPScreen = ({navigation}) => {
     <SafeAreaLayout style={styles.container} insets="top">
       <TopNavigation title="Share an Event" accessoryLeft={renderBackAction} />
       <Layout style={styles.container}>
-        <Text style={{...styles.mv20, ...styles.text}}>Genre</Text>
+        <Text style={{...styles.mv20, ...styles.text}}>Event Name</Text>
         <Input
-          placeholder="Enter the Genre Here"
-          value={genre}
-          onChangeText={nextValue => setGenre(nextValue)}
+          placeholder="Enter the Event Name"
+          value={eventName}
+          onChangeText={nextValue => setEventName(nextValue)}
         />
-        <Text style={{...styles.mv20, ...styles.text}}>Skill</Text>
+        <Text style={{...styles.mv20, ...styles.text}}>Event Details</Text>
         <Input
-          placeholder="Enter the Skill Here"
-          value={skill}
-          onChangeText={nextValue => setSkill(nextValue)}
+          placeholder="Enter the Event Details"
+          value={details}
+          multiline
+          textStyle={{minHeight: 96}}
+          onChangeText={nextValue => setDetails(nextValue)}
         />
         <Button onPress={handleNext} style={styles.mv40}>
           Next

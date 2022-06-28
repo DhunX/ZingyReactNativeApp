@@ -13,8 +13,9 @@ import {ArrowIosBackIcon} from '../../../../components/icons';
 
 export const RSVPDetailsScreen = ({route, navigation}) => {
   const [location, setLocation] = useState('');
+  const [date, setDate] = useState('');
   const [duration, setDuration] = useState('');
-  const {skill, genre} = route.params;
+  const {eventName, details} = route.params;
 
   const renderBackAction = (): React.ReactElement => (
     <TopNavigationAction icon={ArrowIosBackIcon} onPress={navigation.goBack} />
@@ -23,8 +24,9 @@ export const RSVPDetailsScreen = ({route, navigation}) => {
   const handleNext = () => {
     if (location && duration) {
       navigation.navigate('RSVPSubmitScreen', {
-        skill,
-        genre,
+        eventName,
+        details,
+        date,
         location,
         duration,
       });
@@ -39,9 +41,15 @@ export const RSVPDetailsScreen = ({route, navigation}) => {
       <Layout style={styles.container}>
         <Text style={{...styles.mv20, ...styles.text}}>Location</Text>
         <Input
-          placeholder="Enter the Location of Job"
+          placeholder="Enter the Link or Location of Event"
           value={location}
           onChangeText={nextValue => setLocation(nextValue)}
+        />
+        <Text style={{...styles.mv20, ...styles.text}}>Date</Text>
+        <Input
+          placeholder="Choose the Date"
+          value={date}
+          onChangeText={nextValue => setDate(nextValue)}
         />
         <Text style={{...styles.mv20, ...styles.text}}>Duration</Text>
         <Input

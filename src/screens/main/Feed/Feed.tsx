@@ -33,6 +33,7 @@ import TextSvg from '../../../assets/vectors/text.svg';
 import TrackSvg from '../../../assets/vectors/track.svg';
 import {Loading} from '../../Loading';
 import {JobCard} from '../../../components/molecules/job-card.component';
+import {RSVPCard} from '../../../components/molecules/rsvp-card.component';
 
 interface PostType {
   description: string;
@@ -42,6 +43,10 @@ interface PostType {
   skill: string;
   location: string;
   duration: string;
+
+  // rsvp specific fields
+  eventName: string;
+  date: string;
 
   tags: string[];
   author: User;
@@ -210,6 +215,16 @@ export const Feed = ({navigation}) => {
                     <JobCard
                       genre={post.genre}
                       skill={post.skill}
+                      location={post.location}
+                      duration={post.duration}
+                      action={() => navigation.navigate('MaintenanceScreen')}
+                      type={post.type}
+                    />
+                  )}
+                  {post.type === POST_TYPES.EVENT_POST && (
+                    <RSVPCard
+                      eventName={post.eventName}
+                      date={post.date}
                       location={post.location}
                       duration={post.duration}
                       action={() => navigation.navigate('MaintenanceScreen')}

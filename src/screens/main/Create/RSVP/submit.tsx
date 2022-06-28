@@ -1,6 +1,5 @@
 import {StyleSheet, Image} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {SafeAreaLayout} from '../../../../components/safe-area-layout.component';
 import {
   Layout,
   TopNavigation,
@@ -9,13 +8,17 @@ import {
   Button,
   Input,
 } from '@ui-kitten/components';
+import Toast from 'react-native-toast-message';
+
+import {SafeAreaLayout} from '../../../../components/safe-area-layout.component';
 import {ArrowIosBackIcon} from '../../../../components/icons';
+import {RSVPCard} from '../../../../components/molecules/rsvp-card.component';
+
 import {User} from '../../../../types/User';
 import {useAuth} from '../../../../context/auth';
+import {createRSVPPost} from '../../../../services/create';
 import {getMyInfo} from '../../../../services/apis';
 import {Loading} from '../../../Loading';
-import {createJobPost, createTextPost} from '../../../../services/create';
-import Toast from 'react-native-toast-message';
 
 export const RSVPSubmitScreen = ({route, navigation}) => {
   const {accessToken} = useAuth();
@@ -23,11 +26,11 @@ export const RSVPSubmitScreen = ({route, navigation}) => {
   const [value, setValue] = useState('');
   const [user, setUser] = React.useState<User>();
   const {
-    genre,
-    skill,
+    eventName,
+    date,
     location,
     duration,
-  }: {genre: string; skill: string; location: string; duration: string} =
+  }: {eventName: string; date: string; location: string; duration: string} =
     route.params;
 
   React.useEffect(() => {
@@ -49,10 +52,10 @@ export const RSVPSubmitScreen = ({route, navigation}) => {
 
   const handleSubmitPost = async () => {
     setLoading(true);
-    createJobPost(accessToken, {
-      genre,
-      skill,
+    createRSVPPost(accessToken, {
+      eventName,
       location,
+      date,
       duration,
       description: value,
     })
@@ -77,6 +80,8 @@ export const RSVPSubmitScreen = ({route, navigation}) => {
         navigation.navigate('FeedScreen');
       });
   };
+
+  console.log(route.params);
 
   if (loading) {
     return <Loading />;
@@ -104,6 +109,12 @@ export const RSVPSubmitScreen = ({route, navigation}) => {
           onChangeText={nextValue => setValue(nextValue)}
           multiline
           textStyle={{minHeight: 64}}
+        />
+        <RSVPCard
+          eventName={eventName}
+          date={date}
+          location={location}
+          duration={duration}
         />
         <Button style={{marginTop: 20}} onPress={handleSubmitPost}>
           Post
@@ -134,5 +145,6 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 72,
     height: 72,
+    borderRadius: 36,
   },
 });

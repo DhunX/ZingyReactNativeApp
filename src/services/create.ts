@@ -71,3 +71,26 @@ export const createHireMePost = async (token: string, {genre, skill, location, d
         return error;
     }
 };
+
+export const createRSVPPost = async (token: string, {eventName, date, location, duration, description}: {eventName: string, date: string, location: string, duration: string, description: string}) => {
+    const uri = `${BASE_URL_STAGING}/writer/post`;
+    try {
+        const response = await axios.post(uri, {
+                location: location,
+                duration: duration,
+                eventName: eventName,
+                date: date,
+                description: description,
+                type: POST_TYPES.EVENT_POST,
+        }, {
+            headers: {
+                'x-api-key': API_KEY,
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response;
+    } catch (error) {
+        return error;
+    }
+};

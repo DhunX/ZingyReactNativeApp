@@ -29,6 +29,7 @@ import {SafeAreaLayout} from '../../../components/safe-area-layout.component';
 import {
   ArrowIosBackIcon,
   MoreVerticalIcon,
+  ChatIcon,
   // SettingsIcon,
 } from '../../../components/icons';
 import {Button} from '../../../components/atoms/button.component';
@@ -208,22 +209,14 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
+                justifyContent: 'space-between',
                 width: '100%',
-                position: 'relative',
                 height: 60,
-                marginTop: 12,
+                padding: 16,
               }}>
-              <Button
-                style={{position: 'absolute', right: 10}}
-                color="black"
-                icon={MoreVerticalIcon}
-              />
               <EvaButton
                 appearance={following ? 'outline' : 'filled'}
                 style={{
-                  position: 'absolute',
-                  left: '50%',
-                  transform: [{translateX: -50}],
                   backgroundColor: following
                     ? '#fff'
                     : theme['color-primary-600'],
@@ -233,6 +226,20 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
                 }}>
                 {!following ? 'Follow' : 'Following'}
               </EvaButton>
+              <Layout style={{display: 'flex', flexDirection: 'row'}}>
+                <Button
+                  color="black"
+                  appearance="ghost"
+                  style={{width: 40}}
+                  icon={ChatIcon}
+                />
+                <Button
+                  color="black"
+                  style={{width: 40}}
+                  appearance="ghost"
+                  icon={MoreVerticalIcon}
+                />
+              </Layout>
               {/* <OverflowMenu
                 visible={visible}
                 selectedIndex={selectedIndex}
@@ -243,7 +250,6 @@ export const ProfilePublic = ({route, navigation}): JSX.Element => {
                 <MenuItem key={1} title={'Share'} />
                 <MenuItem key={2} title={'Report'} />
               </OverflowMenu> */}
-              {/* <MoreVerticalIcon /> */}
             </View>
           </View>
         </View>

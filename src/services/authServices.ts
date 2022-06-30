@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {User} from '../types/User';
 
+import {API_KEY} from '@env';
+
 export type AuthData = {
   tokens: {accessToken: string; refreshToken: string};
   email: string;
@@ -18,7 +20,7 @@ const logInBasic = async (email: string, password: string) => {
     },
     {
       headers: {
-        'x-api-key': 'b70e1cd3-8133-450b-827b-0ab3fcddee54',
+        'x-api-key': API_KEY,
         'Content-Type': 'application/json',
       },
     },
@@ -35,7 +37,26 @@ const signUp = async (email: string, password: string, name?: string) => {
     },
     {
       headers: {
-        'x-api-key': 'b70e1cd3-8133-450b-827b-0ab3fcddee54',
+        'x-api-key': API_KEY,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
+
+const signUpUsername = async (username: string, password: string, name: string, phoneNumber: string, email?: string) => {
+  return axios.post(
+    'https://api-zingy-staging.herokuapp.com/v1/signup/username',
+    {
+      name: name ? name : email,
+      email,
+      password,
+      username,
+      phoneNumber,
+    },
+    {
+      headers: {
+        'x-api-key': API_KEY,
         'Content-Type': 'application/json',
       },
     },
@@ -54,4 +75,5 @@ export const authServices = {
   logInBasic,
   signUp,
   signUpWithGoogle,
+  signUpUsername,
 };

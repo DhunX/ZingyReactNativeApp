@@ -2,6 +2,11 @@ import React, {createContext, useState, useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {AuthData, authServices} from '../services/authServices';
+import Toast from 'react-native-toast-message';
+
+import {getUser} from '../graphql/queries';
+
+import {Auth, API, graphqlOperation} from 'aws-amplify';
 
 type AuthContextData = {
   authData?: AuthData;
@@ -10,6 +15,13 @@ type AuthContextData = {
   loading: boolean;
   hasAccess?: boolean;
   signUp(email: string, password: string, name?: string): Promise<void>;
+  signUpUsername(
+    username: string,
+    password: string,
+    name: string,
+    phoneNumber: string,
+    email?: string,
+  ): Promise<void>;
   logInGoogle(email: string, name?: string): Promise<void>;
   logIn(email: string, password: string, navigation: any): Promise<void>;
   signOut(navigation: any): void;
@@ -115,6 +127,91 @@ const AuthProvider: React.FC = ({children}) => {
     //to be recovered in the next user session.
     // e.g. : LocalStorage.setItem("@AuthData", JSON.stringify(_authData));
   };
+
+  const signUpUsername = async (
+    username: string,
+    password: string,
+    name: string,
+    phoneNumber: string,
+    email?: string,
+  ) => {
+    setLoading(true);
+    //call the service passing credential (email and password).
+    //In a real App this data will be provided by the user from some InputText components.
+    try {
+      const _authData = await authServices.signUpUsername(
+        username,
+        password,
+        name,
+        phoneNumber,
+        email,
+      );
+
+      if (_authData.status === 200) {
+        Toast.show({
+          text1: 'Sign up successful',
+          type: 'success',
+          position: 'bottom',
+        });
+        setAuthData(_authData.data);
+        AsyncStorage.setItem('@AuthData', JSON.stringify(_authData.data));
+        AsyncStorage.setItem(
+          '@ZingyAccessToken',
+          _authData.data.data.tokens.accessToken,
+        );
+        setAccessToken(_authData.data.data.tokens.accessToken);
+        setRefreshToken(_authData.data.data.tokens.refreshToken);
+        AsyncStorage.setItem(
+          '@ZingyRefreshToken',
+          _authData.data.data.tokens.refreshToken,
+        );
+      } else {
+        Toast.show({
+          text1: 'Sign up failed',
+          type: 'error',
+          position: 'bottom',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        text1: error.message,
+        type: 'error',
+        position: 'bottom',
+      });
+    } finally {
+      setLoading(false);
+    }
+    // try {
+    //   const _authData = await authServices.signUpUsername(
+    //     email,
+    //     password,
+    //     name ? name : email,
+    //   );
+    //   setAuthData(_authData.data);
+    //   AsyncStorage.setItem('@AuthData', JSON.stringify(_authData.data));
+    //   AsyncStorage.setItem(
+    //     '@ZingyAccessToken',
+    //     _authData.data.data.tokens.accessToken,
+    //   );
+    //   setAccessToken(_authData.data.data.tokens.accessToken);
+    //   setRefreshToken(_authData.data.data.tokens.refreshToken);
+    //   AsyncStorage.setItem(
+    //     '@ZingyRefreshToken',
+    //     _authData.data.data.tokens.refreshToken,
+    //   );
+    // } catch (error) {
+    //   console.log('AsyncStorageSavingDataErr:', error);
+    // } finally {
+    //   setLoading(false);
+    // }
+    //Set the data in the context, so the App can be notified
+    //and send the user to the AuthStack
+
+    //Persist the data in the Local Storage
+    //to be recovered in the next user session.
+    // e.g. : LocalStorage.setItem("@AuthData", JSON.stringify(_authData));
+  };
   const logInGoogle = async (email: string, name?: string) => {
     setLoading(true);
     //call the service passing credential (email and password).
@@ -165,6 +262,7 @@ const AuthProvider: React.FC = ({children}) => {
         logIn,
         logInGoogle,
         signUp,
+        signUpUsername,
         signOut,
         hasAccess,
       }}>

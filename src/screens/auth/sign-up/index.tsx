@@ -10,6 +10,7 @@ import {
   Text,
   useStyleSheet,
 } from '@ui-kitten/components';
+
 import {ImageOverlay} from './extra/image-overlay.component';
 import {
   ArrowForwardIconOutline,
@@ -20,18 +21,62 @@ import {
 } from './extra/icons';
 import {KeyboardAvoidingView} from './extra/3rd-party';
 
+import {authServices} from '../../../services/authServices';
+import Toast from 'react-native-toast-message';
+import {useAuth} from '../../../context/auth';
+
 export default ({navigation}): React.ReactElement => {
+  const {signUpUsername} = useAuth();
   const [firstName, setFirstName] = React.useState<string>();
-  const [lastName, setLastName] = React.useState<string>();
+  // const [lastName, setLastName] = React.useState<string>();
+  const [phoneNumber, setPhoneNumber] = React.useState<string>();
   const [email, setEmail] = React.useState<string>();
+  const [username, setUsername] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
-  const [dob, setDob] = React.useState<Date>();
+  // const [dob, setDob] = React.useState<Date>();
   const [termsAccepted, setTermsAccepted] = React.useState<boolean>(false);
 
   const styles = useStyleSheet(themedStyles);
 
-  const onSignUpButtonPress = (): void => {
-    navigation && navigation.goBack();
+  const onSignUpButtonPress = async () => {
+    // navigation && navigation.goBack();
+    if (!termsAccepted) {
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'You must accept the terms and conditions',
+      });
+      return;
+    }
+
+    if (!firstName || !phoneNumber || !email || !username || !password) {
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Please fill in all the fields',
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Password must be at least 6 characters',
+      });
+      return;
+    }
+
+    if (phoneNumber.length !== 10) {
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Phone number must be 10 digits',
+      });
+      return;
+    }
+
+    signUpUsername(username, password, firstName, phoneNumber, email);
   };
 
   const onSignInButtonPress = (): void => {
@@ -111,33 +156,46 @@ export default ({navigation}): React.ReactElement => {
       <Text style={styles.emailSignLabel}>Sign up with Email</Text>
       <View style={[styles.container, styles.formContainer]}>
         <Input
-          placeholder="John"
-          label="FIRST NAME"
+          placeholder="John Doe"
+          label="NAME"
           autoCapitalize="words"
           value={firstName}
           onChangeText={setFirstName}
         />
-        <Input
+        {/* <Input
           style={styles.formInput}
           placeholder="Doe"
           label="LAST NAME"
           autoCapitalize="words"
           value={lastName}
           onChangeText={setLastName}
-        />
-        <Datepicker
+        /> */}
+        {/* <Datepicker
           style={styles.formInput}
-          placeholder="22/10/2001"
           label="Date of Birth"
           date={dob}
           onSelect={setDob}
-        />
+        /> */}
         <Input
           style={styles.formInput}
           placeholder="john.doe@yourmail.com"
           label="EMAIL"
           value={email}
           onChangeText={setEmail}
+        />
+        <Input
+          style={styles.formInput}
+          placeholder="Search for an available username"
+          label="USERNAME"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <Input
+          style={styles.formInput}
+          placeholder="Enter your phone number"
+          label="PHONE"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
         />
         <Input
           style={styles.formInput}

@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-zingyreactnativeapp-dev-04703-authRole",
+      "UnauthRoleArn": "arn:aws:iam::131109256231:role/amplify-zingyreactnativeapp-dev-04703-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::131109256231:role/amplify-zingyreactnativeapp-dev-04703-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-zingyreactnativeapp-dev-04703-deployment",
+      "UnauthRoleName": "amplify-zingyreactnativeapp-dev-04703-unauthRole",
+      "StackName": "amplify-zingyreactnativeapp-dev-04703",
+      "StackId": "arn:aws:cloudformation:ap-south-1:131109256231:stack/amplify-zingyreactnativeapp-dev-04703/0d05bc70-014e-11ed-9094-02643796cda2",
+      "AmplifyAppId": "dj917whh2awe8"
+    }
+  }
+}

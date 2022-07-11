@@ -1,0 +1,26 @@
+{
+  "api": {
+    "zingyreactnativeapp": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "AWS_IAM"
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 365,
+                "apiKeyExpirationDate": "2023-07-11T19:25:51.794Z",
+                "description": "GRAPHQL_SANDBOX_KEY"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

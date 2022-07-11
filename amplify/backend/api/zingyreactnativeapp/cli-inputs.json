@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "zingyreactnativeapp",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/Users/anandjeechoubey/Desktop/zingy/ZingyReactNativeApp/amplify/backend/api/zingyreactnativeapp/schema.graphql",
+    "defaultAuthType": {
+      "mode": "AWS_IAM"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-07-11T19:25:51.794Z",
+        "keyDescription": "GRAPHQL_SANDBOX_KEY"
+      }
+    ]
+  }
+}

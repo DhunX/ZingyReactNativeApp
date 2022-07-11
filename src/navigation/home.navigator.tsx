@@ -12,6 +12,8 @@ import {ProfileNavigator} from './profile.navigator';
 import {HomeBottomNavigation} from '../components/navigation/home-bottom-navigation';
 import {SettingsNavigator} from './settings.navigator';
 import ProfilePublic from '../screens/main/ProfilePublic';
+import {EditProfileScreen} from '../screens/main/Profile/EditProfile';
+import Profile from '../screens/main/Profile';
 // import {HomeDrawer} from '../components/drawer/home-drawer';
 
 const BottomTab = createBottomTabNavigator();
@@ -23,7 +25,12 @@ const BottomTab = createBottomTabNavigator();
  */
 // const initialTabRoute: string = __DEV__ ? 'Components' : 'Layouts';
 
-const ROOT_ROUTES: string[] = ['Feed', 'Search', 'ChatsListScreen', 'Profile'];
+const ROOT_ROUTES: string[] = [
+  'Feed',
+  'Search',
+  'ChatsListScreen',
+  'ProfileScreen',
+];
 
 const TabBarVisibilityOptions = ({route}): BottomTabNavigationOptions => {
   const isNestedRoute: boolean = route.state?.index > 0;
@@ -42,10 +49,11 @@ export const HomeNavigator = (): React.ReactElement => (
     )}>
     <BottomTab.Screen name="Feed" component={FeedNavigator} />
     <BottomTab.Screen name="Search" component={SearchNavigator} />
-    <BottomTab.Screen name="Profile" component={ProfileNavigator} />
+    <BottomTab.Screen name="ProfileScreen" component={Profile} />
+    {/* <BottomTab.Screen name="EditProfileScreen" component={EditProfileScreen} /> */}
     <BottomTab.Screen name="PublicProfile" component={ProfilePublic} />
     <BottomTab.Screen name="Chat" component={ChatsNavigator} />
-    <BottomTab.Screen name="Settings" component={SettingsNavigator} />
+    {/* <BottomTab.Screen name="Settings" component={SettingsNavigator} /> */}
   </BottomTab.Navigator>
 );
 

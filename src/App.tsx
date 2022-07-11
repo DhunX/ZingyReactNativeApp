@@ -6,6 +6,11 @@ import * as eva from '@eva-design/eva';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
+import {Amplify} from 'aws-amplify';
+import PubSub from '@aws-amplify/pubsub';
+import config from './aws-exports';
+// import {withAuthenticator} from 'aws-amplify-react';
+
 import {default as theme} from './custom-theme.json';
 
 import {AuthProvider} from './context/auth';
@@ -21,6 +26,8 @@ export const ThemeModeContext = React.createContext<{
   mode: 'light',
   setMode: () => {},
 });
+
+Amplify.configure(config);
 
 export default (): React.ReactElement => {
   const [themeMode, setThemeMode] = React.useState('light');

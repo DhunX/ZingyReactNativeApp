@@ -15,6 +15,8 @@ import {RSVPDetailsScreen} from '../screens/main/Create/RSVP/details';
 import {RSVPSubmitScreen} from '../screens/main/Create/RSVP/submit';
 import {HireDetailsScreen} from '../screens/main/Create/Hire/details';
 import {MaintenanceScreen} from '../screens/Maintenance';
+import {EditProfileScreen} from '../screens/main/Profile/EditProfile';
+import SettingsScreen from '../screens/main/Settings';
 
 /*
  * Navigation theming: https://reactnavigation.org/docs/en/next/themes.html
@@ -51,6 +53,8 @@ export const AppNavigator = (): React.ReactElement => (
       <Stack.Screen name="RSVPDetailsScreen" component={RSVPDetailsScreen} />
       <Stack.Screen name="RSVPSubmitScreen" component={RSVPSubmitScreen} />
       <Stack.Screen name="MaintenanceScreen" component={MaintenanceScreen} />
+      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );

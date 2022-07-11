@@ -257,7 +257,7 @@ export const Feed = ({navigation}) => {
       <RBSheet
         ref={refRBSheet}
         height={300}
-        closeOnDragDown={false}
+        closeOnDragDown={true}
         closeOnPressMask={true}
         customStyles={{
           container: {

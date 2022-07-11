@@ -62,7 +62,11 @@ export const Profile = ({navigation}): JSX.Element => {
   const renderSettingsAction = (): React.ReactElement => (
     <TopNavigationAction
       icon={SettingsIcon}
-      onPress={() => navigation.navigate('Settings')}
+      onPress={() =>
+        navigation.navigate('SettingsScreen', {
+          profileImage: user.profilePicUrl,
+        })
+      }
     />
   );
 
@@ -178,7 +182,9 @@ export const Profile = ({navigation}): JSX.Element => {
                   left: '50%',
                   transform: [{translateX: -50}],
                 }}
-                onPress={() => navigation.navigate('EditProfileScreen')}>
+                onPress={() =>
+                  navigation.navigate('EditProfileScreen', {user})
+                }>
                 Edit Profile
               </EvaButton>
               {/* <OverflowMenu
